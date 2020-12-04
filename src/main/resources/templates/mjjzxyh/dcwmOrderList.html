@@ -14,19 +14,24 @@
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/webjars/bootstrap-table/1.16.0/bootstrap-table.min.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
-
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datetimepicker.css">
 
     <script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
     <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Bootstrap table: Bootstrap 的 jQuery 扩展表格插件，实现查询、分页、排序、复选框、设置显示列、Card view视图、主从表显示、合并列、国际化处理等处理功能 -->
     <script src="/webjars/bootstrap-table/1.16.0/bootstrap-table.min.js"></script>
     <script src="/webjars/bootstrap-table/1.16.0/locale/bootstrap-table-zh-CN.min.js"></script>
+    <!-- Bootstrap-datetimepicker 日期时间选择器 -->
+    <script type="text/javascript" src="../js/datetimepicker/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="../js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script>
         $(function () {
             //调用函数，初始化表格
             initTable();
             //当点击查询按钮的时候执行,bootstrap-table前端分页是不能使用搜索功能，所以可以提取出来自定义搜索。
             $("#queryBtn").bind("click", initTable);
+            // 初始化时间控件datetimepicker
+            initDatetimepicker();
         });
         function initTable() {
             //先销毁表格
@@ -63,7 +68,9 @@
                     return {//这里的params是table提供的
                         offset: params.offset,//从数据库第几条记录开始
                         limit: params.limit,//找多少条
-                        schoolId: $("#query_school").val() //这个就是搜索框中的内容，可以自动传到后台，搜索实现在xml中体现
+                        schoolId: $("#querySchool").val(), //这个就是搜索框中的内容，可以自动传到后台，搜索实现在xml中体现
+                        canteenId: $("#queryCanteen").val(),
+                        queryDate: $("#queryDate").val()
                     };
                 },
                 responseHandler: function (res) {　//如果后台返回的json格式不是{rows:[{...},{...}],total:100},可以在这块处理成这样的格式　　　　　　return res;
@@ -96,6 +103,53 @@
                 }
             });
         }
+
+        function initDatetimepicker() {
+            $('#queryDate').datetimepicker({
+                bootcssVer: 3,
+                forceParse: 0,//设置为0，时间不会跳转1899，会显示当前时间。
+                language: 'zh-CN',//显示中文
+                format: 'yyyy-mm-dd',//显示格式
+                minView: "month",//设置只显示到月份
+                initialDate: new Date(),//初始化当前日期
+                autoclose: true,//选中自动关闭
+                todayBtn: true//显示今日按钮
+            });
+            $("#queryDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
+        }
+
+        // 切换学校调用生成食堂
+        function selectSchool(value) {
+            $.ajax({
+                type: "GET",
+                url: '/dcwmOrder/findCanteenBySchoolId',
+                data: {
+                    "schoolId": value
+                },
+                cache: false,
+                success: function (data) {
+                    // 清空select
+                    $("#queryCanteen").empty();
+                    //由JSON字符串转换为JSON对象
+                    var dataJson = JSON.parse(data);
+                    var canteens = dataJson["canteens"];
+                    // 重新组装食堂select
+                    $.each(canteens, function(i, item){
+                        $("#queryCanteen").append("<option value='"+item.canteenId+"'>"+item.name+"</option>");
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    /*弹出jqXHR对象的信息*/
+                    alert('error ajax请求被拒绝:  ' +
+                        '\n jqXHR.responseText: ' + jqXHR.responseText +
+                        '\n jqXHR.status: ' + jqXHR.status +
+                        '\n jqXHR.readyState: ' + jqXHR.readyState +
+                        '\n jqXHR.statusText: ' + jqXHR.statusText +
+                        '\n textStatus: ' + textStatus +
+                        "\n errorThrown:" +errorThrown);
+                }
+            })
+        }
     </script>
 
 </head>
@@ -116,16 +170,23 @@
                     <span>学校：</span>
                 </div>
                 <div style="float:left;">
-                    <select class="form-control" id="query_school">
-                        <option value="0" selected>请选择学校</option>
+                    <select class="form-control" id="querySchool" onchange="selectSchool(value)">
                         <option th:each="school:${schools}" th:text="${school.name}" th:value="${school.schoolId}"></option>
                     </select>
                 </div>
                 <div style="float:left;padding:6px;margin-left:20px">
-                    <span>姓名：</span>
+                    <span>食堂：</span>
                 </div>
                 <div style="float:left;">
-                    <input id="name" class="form-control" style="width:200px;" placeholder="请输入姓名" />
+                    <select class="form-control" id="queryCanteen">
+                        <option th:each="canteen:${canteens}" th:text="${canteen.name}" th:value="${canteen.canteenId}"></option>
+                    </select>
+                </div>
+                <div style="float:left;padding:6px;margin-left:20px">
+                    <span>日期：</span>
+                </div>
+                <div style="float:left;">
+                    <input type="text" name="date" class="form-control" id="queryDate">
                 </div>
                 <div style="float:left;margin-left:20px;">
                     <button id="queryBtn" class="btn btn-primary">查询</button>
@@ -133,9 +194,13 @@
             </div>
         </div>
     </div>
+
     <div class="ibox-content">
         <table id="myTable"></table>
     </div>
+
+    <!-- 获取后端传送对象 -->
+<!--    <input type="hidden" th:value="${session.canteensJson}" id="hiddenInput">-->
 </div>
 
 </body>

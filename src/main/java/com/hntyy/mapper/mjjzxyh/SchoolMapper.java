@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+/**
+ * 学校表
+ */
 @Mapper
 public interface SchoolMapper {
 

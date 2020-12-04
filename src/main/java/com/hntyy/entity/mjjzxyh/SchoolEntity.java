@@ -4,6 +4,9 @@ import com.hntyy.entity.BaseEntity;
 import lombok.Data;
 import java.math.BigDecimal;
 
+/**
+ * 学校
+ */
 @Data
 public class SchoolEntity extends BaseEntity {
 

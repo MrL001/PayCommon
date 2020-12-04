@@ -14,4 +14,14 @@ public class DcwmOrderQuery extends Page {
      */
     private Long schoolId;
 
+    /**
+     * 食堂id
+     */
+    private Long canteenId;
+
+    /**
+     * 查询日期
+     */
+    private String queryDate;
+
 }
