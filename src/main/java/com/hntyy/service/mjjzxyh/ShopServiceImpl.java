@@ -1,5 +1,6 @@
 package com.hntyy.service.mjjzxyh;
 
+import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
 import com.hntyy.entity.mjjzxyh.SchoolEntity;
 import com.hntyy.entity.mjjzxyh.ShopEntity;
 import com.hntyy.mapper.mjjzxyh.SchoolMapper;
@@ -16,8 +17,13 @@ public class ShopServiceImpl implements ShopService {
     private ShopMapper shopMapper;
 
     @Override
-    public List<ShopEntity> findShopByCanteenId(Long canteenId) {
-        return shopMapper.findShopByCanteenId(canteenId);
+    public List<ShopEntity> findShopByCanteenId(DcwmOrderQuery dcwmOrderQuery) {
+        return shopMapper.findShopByCanteenId(dcwmOrderQuery);
+    }
+
+    @Override
+    public int findShopCountByCanteenId(DcwmOrderQuery dcwmOrderQuery) {
+        return shopMapper.findShopCountByCanteenId(dcwmOrderQuery);
     }
 
 }

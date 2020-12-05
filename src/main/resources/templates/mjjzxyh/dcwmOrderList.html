@@ -86,16 +86,13 @@
                         return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
                     }
                 }, {
-                    field: 'id',
-                    title: 'id',
+                    field: 'shopName',
+                    title: '店铺名称',
 
                 }, {
-                    field: 'username',
-                    title: '用户名',
-                }, {
-                    field: 'password',
-                    title: '密码'
-                } ],
+                    field: 'totalPrices',
+                    title: '每日营业额',
+                }],
                 onLoadSuccess: function () {
                 },
                 onLoadError: function () {
@@ -113,9 +110,10 @@
                 minView: "month",//设置只显示到月份
                 initialDate: new Date(),//初始化当前日期
                 autoclose: true,//选中自动关闭
+                clearBtn: true,//自定义属性,true 显示 清空按钮 false 隐藏 默认:true
                 todayBtn: true//显示今日按钮
             });
-            $("#queryDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
+            // $("#queryDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
         }
 
         // 切换学校调用生成食堂
@@ -128,11 +126,13 @@
                 },
                 cache: false,
                 success: function (data) {
+                    console.info(data)
                     // 清空select
                     $("#queryCanteen").empty();
                     //由JSON字符串转换为JSON对象
-                    var dataJson = JSON.parse(data);
-                    var canteens = dataJson["canteens"];
+                    // var canteens = JSON.parse(data);
+                    var canteens = data;
+                    console.info(canteens)
                     // 重新组装食堂select
                     $.each(canteens, function(i, item){
                         $("#queryCanteen").append("<option value='"+item.canteenId+"'>"+item.name+"</option>");
@@ -199,8 +199,6 @@
         <table id="myTable"></table>
     </div>
 
-    <!-- 获取后端传送对象 -->
-<!--    <input type="hidden" th:value="${session.canteensJson}" id="hiddenInput">-->
 </div>
 
 </body>

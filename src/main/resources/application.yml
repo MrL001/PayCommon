@@ -31,4 +31,5 @@ mybatis:
 logging:
   config: classpath:log4j2-spring.xml
   level:
-    cn.jay.repository: trace
+    #打印mybatis的sql语句
+    com.hntyy.mapper: debug

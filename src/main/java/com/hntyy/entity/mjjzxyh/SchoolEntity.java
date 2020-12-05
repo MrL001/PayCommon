@@ -1,5 +1,8 @@
 package com.hntyy.entity.mjjzxyh;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.hntyy.entity.BaseEntity;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -8,11 +11,13 @@ import java.math.BigDecimal;
  * 学校
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SchoolEntity extends BaseEntity {
 
     /**
      * 学校id
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long schoolId;
 
     /**

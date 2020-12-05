@@ -3,41 +3,31 @@ package com.hntyy.entity.mjjzxyh;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.hntyy.entity.BaseEntity;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
- * 食堂
+ * 点餐外卖订单列表 展示Rusult
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CanteenEntity extends BaseEntity {
+public class DcwmOrderRusult {
 
     /**
-     * 食堂id
+     * 店铺id
      */
     @JsonSerialize(using= ToStringSerializer.class)
-    private Long canteenId;
+    private Long shopId;
 
     /**
-     * 名称
+     * 店铺name
      */
-    private String name;
+    private String shopName;
 
     /**
-     * 头像
+     * 总价统计 默认值：0
      */
-    private String icon;
-
-    /**
-     * 简介
-     */
-    private String summary;
-
-    /**
-     * 学校id,外键
-     */
-    @JsonSerialize(using= ToStringSerializer.class)
-    private Long schoolId;
+    private BigDecimal totalPrices = BigDecimal.ZERO;
 
 }

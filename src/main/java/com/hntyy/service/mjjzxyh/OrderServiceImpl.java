@@ -1,5 +1,7 @@
 package com.hntyy.service.mjjzxyh;
 
+import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
+import com.hntyy.entity.mjjzxyh.DcwmOrderRusult;
 import com.hntyy.entity.mjjzxyh.OrderEntity;
 import com.hntyy.entity.mjjzxyh.ShopEntity;
 import com.hntyy.mapper.mjjzxyh.OrderMapper;
@@ -15,8 +17,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Override
-    public List<OrderEntity> findOrderByShopIdsAndDate(List<Long> shopIds, String date) {
-        return orderMapper.findOrderByShopIdsAndDate(shopIds,date);
+    public List<DcwmOrderRusult> findOrderByShopIdsAndDate(DcwmOrderQuery dcwmOrderQuery) {
+        return orderMapper.findOrderByShopIdsAndDate(dcwmOrderQuery);
     }
 
 }

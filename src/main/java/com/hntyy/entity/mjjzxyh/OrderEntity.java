@@ -1,5 +1,8 @@
 package com.hntyy.entity.mjjzxyh;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.hntyy.entity.BaseEntity;
 import lombok.Data;
 
@@ -10,6 +13,7 @@ import java.util.Date;
  * 订单
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderEntity extends BaseEntity {
 
     /**
@@ -30,6 +34,7 @@ public class OrderEntity extends BaseEntity {
     /**
      * 订单id
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long orderId;
 
     /**
@@ -140,26 +145,31 @@ public class OrderEntity extends BaseEntity {
     /**
      * 店铺id
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long shopId;
 
     /**
      * 配送人id外键
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long riderAccountId;
 
     /**
      * 商户id
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long merchantAccountId;
 
     /**
      * 推广账户id
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long spreadAccountId;
 
     /**
      * 下单人
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long accountId;
 
     /**
@@ -171,13 +181,7 @@ public class OrderEntity extends BaseEntity {
     /**
      * 学校id
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long schoolId;
-
-
-    /**
-     * 返回需要的额外值：非数据库
-     */
-    // 总价统计
-    private BigDecimal totalPrices;
 
 }

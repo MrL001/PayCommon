@@ -1,5 +1,8 @@
 package com.hntyy.entity.mjjzxyh;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.hntyy.entity.BaseEntity;
 import lombok.Data;
 
@@ -9,11 +12,13 @@ import java.math.BigDecimal;
  * 店铺
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShopEntity extends BaseEntity {
 
     /**
      * 店铺id
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long shopId;
 
     /**
@@ -124,16 +129,19 @@ public class ShopEntity extends BaseEntity {
     /**
      * 学校id,外键
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long schoolId;
 
     /**
      * 食堂id,外键
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long canteenId;
 
     /**
      * 商户id,外键
      */
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long accountId;
 
 }
