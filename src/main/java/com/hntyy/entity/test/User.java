@@ -3,8 +3,6 @@ package com.hntyy.entity.test;
 import com.hntyy.entity.Page;
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
 public class User extends Page {
 

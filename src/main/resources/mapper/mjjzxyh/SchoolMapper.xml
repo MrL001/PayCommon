@@ -4,4 +4,8 @@
     <select id="findAll" resultType="com.hntyy.entity.mjjzxyh.SchoolEntity">
         SELECT * FROM school_tb
     </select>
+
+    <select id="findSchoolById" resultType="com.hntyy.entity.mjjzxyh.SchoolEntity">
+        SELECT * FROM school_tb where school_id=#{schoolId}
+    </select>
 </mapper>

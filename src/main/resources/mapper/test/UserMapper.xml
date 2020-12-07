@@ -5,7 +5,4 @@
         SELECT * FROM tb_user where 1=1 LIMIT #{offset},#{limit}
     </select>
 
-    <select id="getCount" resultType="int">
-        SELECT count(*) FROM tb_user
-    </select>
 </mapper>

@@ -1,8 +1,8 @@
 package com.hntyy.mapper.mjjzxyh;
 
 import com.hntyy.entity.mjjzxyh.SchoolEntity;
-import com.hntyy.entity.test.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +14,5 @@ public interface SchoolMapper {
 
     List<SchoolEntity> findAll();
 
+    SchoolEntity findSchoolById(@Param("schoolId") Long schoolId);
 }

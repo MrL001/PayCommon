@@ -2,8 +2,6 @@ package com.hntyy.service.mjjzxyh;
 
 import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
 import com.hntyy.entity.mjjzxyh.DcwmOrderRusult;
-import com.hntyy.entity.mjjzxyh.OrderEntity;
-import com.hntyy.entity.mjjzxyh.ShopEntity;
 import com.hntyy.mapper.mjjzxyh.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

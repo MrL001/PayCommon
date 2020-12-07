@@ -2,6 +2,7 @@ package com.hntyy.entity;
 
 import lombok.Data;
 
+@Data
 public class Page {
 
     // 每页显示数量
@@ -13,27 +14,4 @@ public class Page {
     // sql语句起始索引
     private int offset;
 
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getOffset() {
-        return offset;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
 }

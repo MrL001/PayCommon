@@ -16,4 +16,9 @@ public class SchoolServiceImpl implements SchoolService {
     public List<SchoolEntity> findAll() {
         return schoolMapper.findAll();
     }
+
+    @Override
+    public SchoolEntity findSchoolById(Long schoolId) {
+        return schoolMapper.findSchoolById(schoolId);
+    }
 }

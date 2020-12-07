@@ -9,6 +9,4 @@ public interface UserMapper {
 
     List<User> findAll(User user);
 
-    int getCount(User user);
-
 }

@@ -17,9 +17,4 @@ public class UserServiceImpl implements UserService {
         return userMapper.findAll(user);
     }
 
-    @Override
-    public int getCount(User user) {
-        return userMapper.getCount(user);
-    }
-
 }

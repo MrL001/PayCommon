@@ -8,4 +8,6 @@ public interface SchoolService {
 
     List<SchoolEntity> findAll();
 
+    SchoolEntity findSchoolById(Long schoolId);
+
 }

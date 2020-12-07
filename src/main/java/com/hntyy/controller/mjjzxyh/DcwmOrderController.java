@@ -11,14 +11,12 @@ import com.hntyy.service.mjjzxyh.CanteenService;
 import com.hntyy.service.mjjzxyh.OrderService;
 import com.hntyy.service.mjjzxyh.SchoolService;
 import com.hntyy.service.mjjzxyh.ShopService;
-import com.hntyy.service.test.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -35,9 +33,6 @@ import java.util.List;
 public class DcwmOrderController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private SchoolService schoolService;
 
     @Autowired
@@ -51,6 +46,7 @@ public class DcwmOrderController {
 
     // 全局变量，用于导出获取，减少查询次数
     private List<DcwmOrderRusult> result = new ArrayList<>();
+    private Long schoolId;
     private Long canteenId;
 
     @RequestMapping("/index")
@@ -70,6 +66,7 @@ public class DcwmOrderController {
     public String findAll(DcwmOrderQuery dcwmOrderQuery) {
         // 清楚数据
         result = new ArrayList<>();
+        schoolId = dcwmOrderQuery.getSchoolId();
         canteenId = dcwmOrderQuery.getCanteenId();
         PageHelper<DcwmOrderRusult> pageHelper = new PageHelper();
 
@@ -126,16 +123,17 @@ public class DcwmOrderController {
     @RequestMapping("/exportDcwmOrder")
     public void exportDcwmOrder(HttpServletResponse response){
         try {
-            // 查询食堂name
+            // 查询学校&食堂name
             CanteenEntity canteenEntity = canteenService.findCanteenById(canteenId);
+            SchoolEntity schoolEntity = schoolService.findSchoolById(schoolId);
             Date date = new Date();
             String strDateFormat = "yyyy-MM-dd";
             SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
 
             // 设置响应输出的头类型及下载文件的默认名称
-            ExportParams exportParams = new ExportParams(canteenEntity.getName()+"营业额", "营业额统计表", ExcelType.XSSF);
+            ExportParams exportParams = new ExportParams(schoolEntity.getName()+canteenEntity.getName()+"营业额", "营业额统计表", ExcelType.XSSF);
             exportParams.setStyle(ExcelStyleUtil.class);
-            String fileName = "营业额统计表_"+ dateFormat.format(date) +".xls";
+            String fileName = schoolEntity.getName()+canteenEntity.getName()+"营业额统计表_"+ dateFormat.format(date) +".xls";
 
             String fileNames = new String(fileName.getBytes("utf-8"), "ISO-8859-1");
             response.addHeader("Content-Disposition", "attachment;filename=" + fileNames);
