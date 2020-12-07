@@ -127,13 +127,13 @@ public class DcwmOrderController {
             CanteenEntity canteenEntity = canteenService.findCanteenById(canteenId);
             SchoolEntity schoolEntity = schoolService.findSchoolById(schoolId);
             Date date = new Date();
-            String strDateFormat = "yyyy-MM-dd";
+            String strDateFormat = "yyyyMMdd";
             SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
 
             // 设置响应输出的头类型及下载文件的默认名称
             ExportParams exportParams = new ExportParams(schoolEntity.getName()+canteenEntity.getName()+"营业额", "营业额统计表", ExcelType.XSSF);
             exportParams.setStyle(ExcelStyleUtil.class);
-            String fileName = schoolEntity.getName()+canteenEntity.getName()+"营业额统计表_"+ dateFormat.format(date) +".xls";
+            String fileName = schoolEntity.getName()+"营业额统计表_"+ dateFormat.format(date) +".xls";
 
             String fileNames = new String(fileName.getBytes("utf-8"), "ISO-8859-1");
             response.addHeader("Content-Disposition", "attachment;filename=" + fileNames);
