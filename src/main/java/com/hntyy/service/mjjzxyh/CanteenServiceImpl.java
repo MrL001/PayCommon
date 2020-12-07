@@ -16,4 +16,9 @@ public class CanteenServiceImpl implements CanteenService {
     public List<CanteenEntity> findCanteenBySchoolId(Long schoolId) {
         return canteenMapper.findCanteenBySchoolId(schoolId);
     }
+
+    @Override
+    public CanteenEntity findCanteenById(Long canteenId) {
+        return canteenMapper.findCanteenById(canteenId);
+    }
 }

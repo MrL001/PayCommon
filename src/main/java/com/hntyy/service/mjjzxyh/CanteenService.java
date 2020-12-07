@@ -13,6 +13,13 @@ public interface CanteenService {
      * @param schoolId
      * @return
      */
-    List<CanteenEntity> findCanteenBySchoolId(@Param("schoolId") Long schoolId);
+    List<CanteenEntity> findCanteenBySchoolId(Long schoolId);
+
+    /**
+     * 通过id查询食堂信息
+     * @param canteenId
+     * @return
+     */
+    CanteenEntity findCanteenById(Long canteenId);
 
 }

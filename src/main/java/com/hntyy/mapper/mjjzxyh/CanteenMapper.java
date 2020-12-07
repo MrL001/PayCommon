@@ -19,4 +19,10 @@ public interface CanteenMapper {
      */
     List<CanteenEntity> findCanteenBySchoolId(@Param("schoolId") Long schoolId);
 
+    /**
+     * 通过id查询食堂信息
+     * @param canteenId
+     * @return
+     */
+    CanteenEntity findCanteenById(@Param("canteenId") Long canteenId);
 }

@@ -4,4 +4,8 @@
     <select id="findCanteenBySchoolId" resultType="com.hntyy.entity.mjjzxyh.CanteenEntity">
         SELECT * FROM canteen_tb where school_id=#{schoolId}
     </select>
+
+    <select id="findCanteenById" resultType="com.hntyy.entity.mjjzxyh.CanteenEntity">
+        SELECT * FROM canteen_tb where canteen_id=#{canteenId}
+    </select>
 </mapper>

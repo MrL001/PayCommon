@@ -14,6 +14,13 @@ public interface ShopService {
      * @param dcwmOrderQuery
      * @return
      */
+    List<ShopEntity> findShopByCanteenIdPage(DcwmOrderQuery dcwmOrderQuery);
+
+    /**
+     * 食堂id查店铺，不分页用于导出
+     * @param dcwmOrderQuery
+     * @return
+     */
     List<ShopEntity> findShopByCanteenId(DcwmOrderQuery dcwmOrderQuery);
 
     /**

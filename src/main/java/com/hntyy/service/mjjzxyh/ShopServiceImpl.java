@@ -17,6 +17,11 @@ public class ShopServiceImpl implements ShopService {
     private ShopMapper shopMapper;
 
     @Override
+    public List<ShopEntity> findShopByCanteenIdPage(DcwmOrderQuery dcwmOrderQuery) {
+        return shopMapper.findShopByCanteenIdPage(dcwmOrderQuery);
+    }
+
+    @Override
     public List<ShopEntity> findShopByCanteenId(DcwmOrderQuery dcwmOrderQuery) {
         return shopMapper.findShopByCanteenId(dcwmOrderQuery);
     }

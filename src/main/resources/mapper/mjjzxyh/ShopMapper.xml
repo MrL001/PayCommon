@@ -2,8 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hntyy.mapper.mjjzxyh.ShopMapper">
     <!-- 食堂id查店铺，分页 -->
-    <select id="findShopByCanteenId" resultType="com.hntyy.entity.mjjzxyh.ShopEntity">
+    <select id="findShopByCanteenIdPage" resultType="com.hntyy.entity.mjjzxyh.ShopEntity">
         SELECT * FROM shop_tb WHERE canteen_id=#{canteenId} LIMIT #{offset},#{limit}
+    </select>
+
+    <!-- 食堂id查店铺，不分页用于导出 -->
+    <select id="findShopByCanteenId" resultType="com.hntyy.entity.mjjzxyh.ShopEntity">
+        SELECT * FROM shop_tb WHERE canteen_id=#{canteenId}
     </select>
 
     <!-- 食堂id查店铺，分页。总数 -->

@@ -17,6 +17,9 @@ spring:
     encoding: UTF-8
     mode: HTML5
     cache: false
+  main:
+    #easypoi配置
+    allow-bean-definition-overriding: true
 
 #mybatis的相关配置
 mybatis:
