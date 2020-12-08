@@ -2,6 +2,7 @@ package com.hntyy.controller;
 
 import com.hntyy.common.RedisUtil;
 import com.hntyy.entity.mjjzxyh.SensitiveWordsEntity;
+import com.hntyy.entity.mjjzxyh.SensitiveWordsQuery;
 import com.hntyy.service.mjjzxyh.SensitiveWordsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class InitApplicationRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        List<SensitiveWordsEntity> all = sensitiveWordsService.findAll();
+        List<SensitiveWordsEntity> all = sensitiveWordsService.findAll(new SensitiveWordsQuery());
         boolean sensitiveWords = redisUtil.set("sensitiveWords", all);
         log.info("敏感词保存结果："+sensitiveWords);
     }

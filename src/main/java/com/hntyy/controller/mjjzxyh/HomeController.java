@@ -13,7 +13,6 @@ import java.util.List;
  * User测试类（用于测试Springboot+thymeleaf+bootstrap+mybatis框架流程）
  */
 @RestController
-@RequestMapping("/home")
 public class HomeController {
 
     @Autowired

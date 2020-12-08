@@ -1,6 +1,7 @@
 package com.hntyy.common;
 
 import com.hntyy.entity.mjjzxyh.SensitiveWordsEntity;
+import com.hntyy.entity.mjjzxyh.SensitiveWordsQuery;
 import com.hntyy.service.mjjzxyh.SensitiveWordsService;
 import com.hntyy.service.mjjzxyh.SensitiveWordsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class SensitiveWordInit {
 			//读取敏感词库
 			List<SensitiveWordsEntity> all = (List<SensitiveWordsEntity>) redisUtil.get("sensitiveWords");
 			if (CollectionUtils.isEmpty(all)){
-				all = sensitiveWordsService.findAll();
+				all = sensitiveWordsService.findAll(new SensitiveWordsQuery());
 			}
 			Set<String> keyWordSet = new HashSet<>();
 			all.stream().forEach(sensitiveWordsEntity -> keyWordSet.add(sensitiveWordsEntity.getWord()));
@@ -124,7 +125,7 @@ public class SensitiveWordInit {
 		Set<String> set = new HashSet<>();
 		// 读取数据库敏感词
 		SensitiveWordsServiceImpl sensitiveWordsService = (SensitiveWordsServiceImpl)SpringUtil.getBean(SensitiveWordsServiceImpl.class);
-		List<SensitiveWordsEntity> all = sensitiveWordsService.findAll();
+		List<SensitiveWordsEntity> all = sensitiveWordsService.findAll(new SensitiveWordsQuery());
 		all.stream().forEach(sensitiveWordsEntity -> set.add(sensitiveWordsEntity.getWord()));
 		return set;
 	}

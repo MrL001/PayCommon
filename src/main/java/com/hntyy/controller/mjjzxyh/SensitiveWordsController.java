@@ -1,13 +1,20 @@
 package com.hntyy.controller.mjjzxyh;
 
+import com.alibaba.fastjson.JSON;
 import com.hntyy.common.RedisUtil;
 import com.hntyy.common.SensitivewordFilter;
+import com.hntyy.entity.PageHelper;
+import com.hntyy.entity.mjjzxyh.*;
 import com.hntyy.service.mjjzxyh.SensitiveWordsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -21,12 +28,29 @@ public class SensitiveWordsController {
     @Resource
     private RedisUtil redisUtil;
 
+    @RequestMapping("/index")
+    public ModelAndView index(ModelAndView mv) {
+        mv.setViewName("/mjjzxyh/sensitiveWordsList");
+        return mv;
+    }
+
+    @RequestMapping("/findAll")
+    @ResponseBody
+    public String findAll(SensitiveWordsQuery sensitiveWordsQuery) {
+        List<SensitiveWordsEntity> all = sensitiveWordsService.findAll(sensitiveWordsQuery);
+        int count = sensitiveWordsService.findAllCount(sensitiveWordsQuery);
+        PageHelper<SensitiveWordsEntity> pageHelper = new PageHelper();
+        pageHelper.setTotal(count);
+        pageHelper.setRows(all);
+        return JSON.toJSONString(pageHelper);
+    }
+
     /**
      * 敏感词匹配测试
      * @return
      */
-    @RequestMapping("/index")
-    public String index(){
+    @RequestMapping("/test")
+    public String test(){
         SensitivewordFilter filter = new SensitivewordFilter(redisUtil,sensitiveWordsService);
         String content = "太多的伤感情怀也许只局限于饲养基地 荧幕中的情节，主人公尝试着去用某种方式渐渐的很潇洒地释自杀指南怀那些自己经历的伤感。"
                 + "然后法轮功 我们的扮演的角色就是跟随着主人公的喜红客联盟 怒哀乐而过于牵强的把自己的情感也附加于银幕情节中，然后感动就流泪，"

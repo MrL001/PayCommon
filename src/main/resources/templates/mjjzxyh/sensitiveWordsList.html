@@ -30,14 +30,12 @@
             initTable();
             //当点击查询按钮的时候执行,bootstrap-table前端分页是不能使用搜索功能，所以可以提取出来自定义搜索。
             $("#queryBtn").bind("click", initTable);
-            // 初始化时间控件datetimepicker
-            initDatetimepicker();
         });
         function initTable() {
             //先销毁表格
             $('#myTable').bootstrapTable('destroy');
             $('#myTable').bootstrapTable({
-                url: "/riderOrder/findAll",//请求后台的URL（*）
+                url: "/sensitiveWords/findAll",//请求后台的URL（*）
                 method: 'get',
                 dataType: "json",
                 dataField: 'rows',
@@ -68,7 +66,7 @@
                     return {//这里的params是table提供的
                         offset: params.offset,//从数据库第几条记录开始
                         limit: params.limit,//找多少条
-                        queryDate: $("#queryDate").val()
+                        word: $("#word").val()
                     };
                 },
                 responseHandler: function (res) {　//如果后台返回的json格式不是{rows:[{...},{...}],total:100},可以在这块处理成这样的格式　　　　　　return res;
@@ -84,14 +82,14 @@
                         return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
                     }
                 }, {
-                    field: 'riderName',
-                    title: '姓名',
+                    field: 'id',
+                    title: 'id',
 
                 }, {
-                    field: 'orderNums',
-                    title: '总订单量',
+                    field: 'word',
+                    title: '敏感词',
 
-                },],
+                }],
                 onLoadSuccess: function () {
                 },
                 onLoadError: function () {
@@ -100,62 +98,31 @@
             });
         }
 
-        function initDatetimepicker() {
-            $('#queryDate').datetimepicker({
-                bootcssVer: 3,
-                forceParse: 0,//设置为0，时间不会跳转1899，会显示当前时间。
-                language: 'zh-CN',//显示中文
-                format: 'yyyy-mm-dd',//显示格式
-                minView: "month",//设置只显示到月份
-                initialDate: new Date(),//初始化当前日期
-                autoclose: true,//选中自动关闭
-                clearBtn: true,//自定义属性,true 显示 清空按钮 false 隐藏 默认:true
-                todayBtn: true//显示今日按钮
-            });
-            // $("#queryDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
-        }
-
-        // 导出Excel
-        function exportExcel () {
-            window.location.href = "/riderOrder/exportRiderOrder?random="+Math.round(Math.random()*100);
-        }
     </script>
 
 </head>
 <body>
-<div class="content-wrapper">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12" style="text-align:center;">
-                <h3 class="page-head-line_green">敏感词管理列表</h3>
+<div class="panel panel-primary" style="margin-top: 20px">
+    <div class="panel-heading">
+        <h3 class="panel-title">敏感词管理</h3>
+    </div>
+    <div class="panel-body">
+        <div style="display:inline-block;">
+            <div style="float:left;padding:6px;margin-left:20px">
+                <span>敏感词：</span>
             </div>
-        </div>
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">条件查询</h3>
+            <div style="float:left;">
+                <input type="text" class="form-control" id="word">
             </div>
-            <div class="panel-body">
-                <div style="display:inline-block;">
-                    <div style="float:left;padding:6px;margin-left:20px">
-                        <span>日期：</span>
-                    </div>
-                    <div style="float:left;">
-                        <input type="text" name="date" class="form-control" id="queryDate">
-                    </div>
-                    <div style="float:left;margin-left:20px;">
-                        <button id="queryBtn" class="btn btn-primary">查询</button>
-                    </div>
-                    <div style="float:left;margin-left:20px;">
-                        <button id="exportBtn" class="btn btn-primary" onclick="exportExcel()">导出</button>
-                    </div>
-                </div>
+            <div style="float:left;margin-left:20px;">
+                <button id="queryBtn" class="btn btn-primary">查询</button>
             </div>
-        </div>
-
-        <div class="ibox-content">
-            <table id="myTable"></table>
         </div>
     </div>
+</div>
+
+<div class="ibox-content">
+    <table id="myTable"></table>
 </div>
 
 <div th:replace="foot::footer"></div>
