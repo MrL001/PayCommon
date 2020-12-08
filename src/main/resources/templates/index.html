@@ -35,25 +35,51 @@
 </head>
 <body>
 
-<!-- 导航栏 -->
-<ul class="mw-menubar-superadmin">
-    <li class="pull-left">
-        <ul class="pull-left">
-            <li>
-                <span class="glyphicon glyphicon-tree-conifer"></span>
-                <a class="menuset" href="javascript:void(0)">菜单设置</a>
+<div style="height: 100px;">
+    <div class="col-xs-1">
+        <ul class="nav nav-tab vertical-tab" role="tablist" id="vtab">
+            <li role="presentation" class="active">
+                <a href="#tab1" aria-controls="home" role="tab"
+                   data-toggle="tab">营业额统计</a>
             </li>
-            <li><span class="glyphicon glyphicon-tree-conifer"></span><a href="javascript:void(0)">责任编辑设置</a></li>
-            <li><span class="glyphicon glyphicon-tree-conifer"></span><a href="">小说分类设置</a></li>
-            <li><span class="glyphicon glyphicon-tree-conifer"></span><a href="">其他设置</a></li>
+            <li role="presentation">
+                <a href="#tab2" aria-controls="inbox" role="tab"
+                   data-toggle="tab">骑手订单统计</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab3" aria-controls="outbox" role="tab"
+                   data-toggle="tab">网络</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab4" aria-controls="inbox1" role="tab"
+                   data-toggle="tab">视音频</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab5" aria-controls="outbox1" role="tab"
+                   data-toggle="tab">图像</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab6" aria-controls="outbox1" role="tab"
+                   data-toggle="tab">事件</a>
+            </li>
+            <li role="presentation">
+                <a href="#tab7" aria-controls="outbox1" role="tab"
+                   data-toggle="tab">存储</a>
+            </li>
         </ul>
-    </li>
-</ul>
-
-<!-- 主题内容 -->
-<div class="mw-content">
-    <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="welcom"></iframe>
+    </div>
+    <div class="tab-content vertical-tab-content col-xs-10">
+        <div role="tabpanel" class="tab-pane active" id="tab1">
+            <iframe src="/dcwmOrder/index" scrolling="no" frameborder="0" style="width: 100%;height: 950px"></iframe>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="tab2">
+            <iframe src="/riderOrder/index" scrolling="no" frameborder="0" style="width: 100%;height: 950px"></iframe>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="tab3">这是..网络.</div>
+        <div role="tabpanel" class="tab-pane" id="tab4">这是.视音频..</div>
+        <div role="tabpanel" class="tab-pane" id="tab5">这是..图像.</div>
+        <div role="tabpanel" class="tab-pane" id="tab6">这是..事件.</div>
+        <div role="tabpanel" class="tab-pane" id="tab7">这是..存储.</div>
     </div>
 </div>
 

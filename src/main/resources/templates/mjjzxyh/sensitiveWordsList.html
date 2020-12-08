@@ -9,7 +9,7 @@
     <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <![endif]-->
-    <title>骑手订单统计</title>
+    <title>敏感词管理列表</title>
 
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/webjars/bootstrap-table/1.16.0/bootstrap-table.min.css"/>
@@ -123,30 +123,39 @@
 
 </head>
 <body>
-<div class="panel panel-primary" style="margin-top: 20px">
-    <div class="panel-heading">
-        <h3 class="panel-title">条件查询</h3>
-    </div>
-    <div class="panel-body">
-        <div style="display:inline-block;">
-            <div style="float:left;padding:6px;margin-left:20px">
-                <span>日期：</span>
-            </div>
-            <div style="float:left;">
-                <input type="text" name="date" class="form-control" id="queryDate">
-            </div>
-            <div style="float:left;margin-left:20px;">
-                <button id="queryBtn" class="btn btn-primary">查询</button>
-            </div>
-            <div style="float:left;margin-left:20px;">
-                <button id="exportBtn" class="btn btn-primary" onclick="exportExcel()">导出</button>
+<div class="content-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" style="text-align:center;">
+                <h3 class="page-head-line_green">敏感词管理列表</h3>
             </div>
         </div>
-    </div>
-</div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">条件查询</h3>
+            </div>
+            <div class="panel-body">
+                <div style="display:inline-block;">
+                    <div style="float:left;padding:6px;margin-left:20px">
+                        <span>日期：</span>
+                    </div>
+                    <div style="float:left;">
+                        <input type="text" name="date" class="form-control" id="queryDate">
+                    </div>
+                    <div style="float:left;margin-left:20px;">
+                        <button id="queryBtn" class="btn btn-primary">查询</button>
+                    </div>
+                    <div style="float:left;margin-left:20px;">
+                        <button id="exportBtn" class="btn btn-primary" onclick="exportExcel()">导出</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="ibox-content">
-    <table id="myTable"></table>
+        <div class="ibox-content">
+            <table id="myTable"></table>
+        </div>
+    </div>
 </div>
 
 <div th:replace="foot::footer"></div>

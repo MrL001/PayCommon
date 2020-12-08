@@ -1,4 +1,4 @@
-package com.hntyy.controller;
+package com.hntyy.controller.mjjzxyh;
 
 import com.hntyy.entity.test.User;
 import com.hntyy.service.test.UserService;

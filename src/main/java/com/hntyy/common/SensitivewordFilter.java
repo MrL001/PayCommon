@@ -1,5 +1,7 @@
 package com.hntyy.common;
 
+import com.hntyy.service.mjjzxyh.SensitiveWordsService;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,8 +19,8 @@ public class SensitivewordFilter {
 	/**
 	 * 构造函数，初始化敏感词库
 	 */
-	public SensitivewordFilter(){
-		sensitiveWordMap = new SensitiveWordInit().initKeyWord();
+	public SensitivewordFilter(RedisUtil redisUtil,SensitiveWordsService sensitiveWordsService){
+		sensitiveWordMap = new SensitiveWordInit().initKeyWord(redisUtil,sensitiveWordsService);
 	}
 	
 	/**
@@ -136,7 +138,7 @@ public class SensitivewordFilter {
 	}
 	
 	public static void main(String[] args) {
-		SensitivewordFilter filter = new SensitivewordFilter();
+		SensitivewordFilter filter = new SensitivewordFilter(null,null);
 		System.out.println("敏感词的数量：" + filter.sensitiveWordMap.size());
 		String string = "太多的伤感情怀也许只局限于饲养基地 荧幕中的情节，主人公尝试着去用某种方式渐渐的很潇洒地释自杀指南怀那些自己经历的伤感。"
 						+ "然后法轮功 我们的扮演的角色就是跟随着主人公的喜红客联盟 怒哀乐而过于牵强的把自己的情感也附加于银幕情节中，然后感动就流泪，"

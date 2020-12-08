@@ -1,23 +1,30 @@
 package com.hntyy.common;
 
+import com.hntyy.entity.mjjzxyh.SensitiveWordsEntity;
+import com.hntyy.service.mjjzxyh.SensitiveWordsService;
+import com.hntyy.service.mjjzxyh.SensitiveWordsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Description: 初始化敏感词库，将敏感词加入到HashMap中，构建DFA算法模型
  * @version 1.0
  */
 public class SensitiveWordInit {
+
 	private String ENCODING = "UTF-8";    //字符编码
 	public HashMap sensitiveWordMap;
-	
 	
 	public SensitiveWordInit(){
 		super();
@@ -26,10 +33,15 @@ public class SensitiveWordInit {
 	/**
 	 * @version 1.0
 	 */
-	public Map initKeyWord(){
+	public Map initKeyWord(RedisUtil redisUtil,SensitiveWordsService sensitiveWordsService){
 		try {
 			//读取敏感词库
-			Set<String> keyWordSet = readSensitiveWordFile();
+			List<SensitiveWordsEntity> all = (List<SensitiveWordsEntity>) redisUtil.get("sensitiveWords");
+			if (CollectionUtils.isEmpty(all)){
+				all = sensitiveWordsService.findAll();
+			}
+			Set<String> keyWordSet = new HashSet<>();
+			all.stream().forEach(sensitiveWordsEntity -> keyWordSet.add(sensitiveWordsEntity.getWord()));
 			//将敏感词库加入到HashMap中
 			addSensitiveWordToHashMap(keyWordSet);
 			//spring获取application，然后application.setAttribute("sensitiveWordMap",sensitiveWordMap);
@@ -109,38 +121,11 @@ public class SensitiveWordInit {
 	 * @throws Exception 
 	 */
 	private Set<String> readSensitiveWordFile() throws Exception{
-		Set<String> set = null;
-		
-		//File file = new File("D:\\SensitiveWord.txt");    //读取文件
-		File file = new File("C:\\Users\\Administrator\\Downloads\\敏感词库\\敏感词过滤\\CensorWords1.txt");    //读取文件
-		InputStreamReader read = new InputStreamReader(new FileInputStream(file),ENCODING);
-		try {
-			if(file.isFile() && file.exists()){      //文件流是否存在
-				set = new HashSet<String>();
-				BufferedReader bufferedReader = new BufferedReader(read);
-				String txt = null;
-				while((txt = bufferedReader.readLine()) != null){    //读取文件，将文件内容放入到set中
-					if(txt.indexOf("=")>-1){
-			        	txt=txt.substring(0, txt.indexOf("="));
-			        	}else if(txt.indexOf("|")>-1){
-			        		txt=txt.substring(0, txt.indexOf("|"));
-			        	}else if(txt.indexOf("@")>-1){
-			        		txt=txt.substring(0, txt.indexOf("@"));
-			        	}else if(txt.indexOf("/n")>-1){
-			        		txt=txt.substring(0, txt.indexOf("/n"));
-			        	}
-					set.add(txt);
-					System.out.println(txt);
-			    }
-			}
-			else{         //不存在抛出异常信息
-				throw new Exception("敏感词库文件不存在");
-			}
-		} catch (Exception e) {
-			throw e;
-		}finally{
-			read.close();     //关闭文件流
-		}
+		Set<String> set = new HashSet<>();
+		// 读取数据库敏感词
+		SensitiveWordsServiceImpl sensitiveWordsService = (SensitiveWordsServiceImpl)SpringUtil.getBean(SensitiveWordsServiceImpl.class);
+		List<SensitiveWordsEntity> all = sensitiveWordsService.findAll();
+		all.stream().forEach(sensitiveWordsEntity -> set.add(sensitiveWordsEntity.getWord()));
 		return set;
 	}
 }
