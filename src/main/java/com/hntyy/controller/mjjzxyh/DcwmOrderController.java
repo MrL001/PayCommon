@@ -23,9 +23,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 校源汇-点餐外卖订单 Controller
+ * 根据食堂店铺维度统计订单
  */
 @Slf4j
 @RestController
@@ -64,7 +65,7 @@ public class DcwmOrderController {
     @RequestMapping("/findAll")
     @ResponseBody
     public String findAll(DcwmOrderQuery dcwmOrderQuery) {
-        // 清楚数据
+        // 清除数据
         result = new ArrayList<>();
         schoolId = dcwmOrderQuery.getSchoolId();
         canteenId = dcwmOrderQuery.getCanteenId();
@@ -107,8 +108,11 @@ public class DcwmOrderController {
         });
         if (!empty){
             result.stream().forEach(r -> {
+                // 设置中间变量，判断是否能查到退款数据
+                AtomicBoolean isExist = new AtomicBoolean(false);
                 refundOrders.stream().forEach(refundOrder -> {
                     if (refundOrder.getShopId().longValue() == r.getShopId().longValue()) {
+                        isExist.set(true);
                         // 填充
                         r.setValidTotalPrices(r.getTotalPrices().subtract(refundOrder.getRefundTotalPrices()));  // 有效总金额
                         r.setValidOrderNums(r.getOrderNums()-refundOrder.getRefundOrderNums()); // 有效订单量
@@ -117,6 +121,13 @@ public class DcwmOrderController {
                         r.setShopIncome(r.getValidTotalPrices().subtract(r.getValidDeliveryFee()));  // 店铺收入
                     }
                 });
+                // 无退款设置
+                if (isExist.get() == false){
+                    r.setValidTotalPrices(r.getTotalPrices());  // 有效总金额
+                    r.setValidOrderNums(r.getOrderNums()); // 有效订单量
+                    r.setValidDeliveryFee(r.getDeliveryFee());  // 有效配送费
+                    r.setShopIncome(r.getValidTotalPrices().subtract(r.getValidDeliveryFee()));  // 店铺收入
+                }
             });
         }
 

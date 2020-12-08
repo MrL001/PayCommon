@@ -20,11 +20,6 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<ShopEntity> findShopByCanteenId(DcwmOrderQuery dcwmOrderQuery) {
-        return shopMapper.findShopByCanteenId(dcwmOrderQuery);
-    }
-
-    @Override
     public int findShopCountByCanteenId(DcwmOrderQuery dcwmOrderQuery) {
         return shopMapper.findShopCountByCanteenId(dcwmOrderQuery);
     }

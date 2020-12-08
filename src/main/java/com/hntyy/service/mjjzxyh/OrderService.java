@@ -2,6 +2,9 @@ package com.hntyy.service.mjjzxyh;
 
 import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
 import com.hntyy.entity.mjjzxyh.DcwmOrderRusult;
+import com.hntyy.entity.mjjzxyh.RiderOrderQuery;
+import com.hntyy.entity.mjjzxyh.RiderOrderRusult;
+
 import java.util.List;
 
 public interface OrderService {
@@ -18,5 +21,17 @@ public interface OrderService {
      * @return
      */
     List<DcwmOrderRusult> findRefundOrderByShopIdsAndDate(DcwmOrderQuery dcwmOrderQuery);
+
+    /**
+     * 查询骑手订单
+     * @return
+     */
+    List<RiderOrderRusult> findOrderByRiderAccount(RiderOrderQuery riderOrderQuery);
+
+    /**
+     * 查询骑手订单
+     * @return
+     */
+    int findOrderCountByRiderAccount(RiderOrderQuery riderOrderQuery);
 
 }

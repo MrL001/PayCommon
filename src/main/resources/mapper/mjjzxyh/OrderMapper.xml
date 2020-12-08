@@ -57,4 +57,42 @@
         GROUP BY shop_id
     </select>
 
+    <!-- 通过骑手查订单 -->
+    <select id="findOrderByRiderAccount" resultType="com.hntyy.entity.mjjzxyh.RiderOrderRusult">
+        SELECT
+            account.`account_id` riderAccountId,
+            account.`realname` riderName,
+            COUNT(account.account_id) orderNums
+        FROM
+            account_tb account LEFT JOIN order_tb o ON account.`account_id`=o.`rider_account_id`
+        WHERE
+            -- 骑手
+            account.role_id='1004'
+        AND
+            o.payment_date is not null
+        <if test="queryDate != null and queryDate != ''">
+            AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') = #{queryDate}
+        </if>
+        GROUP BY account.`account_id`
+        LIMIT #{offset},#{limit}
+    </select>
+    <!-- 通过骑手查订单总数 -->
+    <select id="findOrderCountByRiderAccount" resultType="int">
+        select count(1) from (
+            SELECT
+                account.`account_id` riderAccountId
+            FROM
+                account_tb account LEFT JOIN order_tb o ON account.`account_id`=o.`rider_account_id`
+            WHERE
+                -- 骑手
+                account.role_id='1004'
+            AND
+                o.payment_date is not null
+                <if test="queryDate != null and queryDate != ''">
+                    AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') = #{queryDate}
+                </if>
+            GROUP BY account.`account_id`
+        ) temp
+    </select>
+
 </mapper>

@@ -22,4 +22,16 @@ public interface OrderMapper {
      */
     List<DcwmOrderRusult> findRefundOrderByShopIdsAndDate(DcwmOrderQuery dcwmOrderQuery);
 
+    /**
+     * 查询骑手订单
+     * @return
+     */
+    List<RiderOrderRusult> findOrderByRiderAccount(RiderOrderQuery riderOrderQuery);
+
+    /**
+     * 查询骑手订单
+     * @return
+     */
+    int findOrderCountByRiderAccount(RiderOrderQuery riderOrderQuery);
+
 }

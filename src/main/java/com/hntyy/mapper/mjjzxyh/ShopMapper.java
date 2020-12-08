@@ -19,13 +19,6 @@ public interface ShopMapper {
     List<ShopEntity> findShopByCanteenIdPage(DcwmOrderQuery dcwmOrderQuery);
 
     /**
-     * 食堂id查店铺，不分页用于导出
-     * @param dcwmOrderQuery
-     * @return
-     */
-    List<ShopEntity> findShopByCanteenId(DcwmOrderQuery dcwmOrderQuery);
-
-    /**
      * 食堂id查店铺，分页。总数
      * @param dcwmOrderQuery
      * @return

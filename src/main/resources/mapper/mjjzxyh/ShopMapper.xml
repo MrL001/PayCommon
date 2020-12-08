@@ -6,11 +6,6 @@
         SELECT * FROM shop_tb WHERE canteen_id=#{canteenId} LIMIT #{offset},#{limit}
     </select>
 
-    <!-- 食堂id查店铺，不分页用于导出 -->
-    <select id="findShopByCanteenId" resultType="com.hntyy.entity.mjjzxyh.ShopEntity">
-        SELECT * FROM shop_tb WHERE canteen_id=#{canteenId}
-    </select>
-
     <!-- 食堂id查店铺，分页。总数 -->
     <select id="findShopCountByCanteenId" resultType="int">
         SELECT count(*) FROM shop_tb WHERE canteen_id=#{canteenId}
