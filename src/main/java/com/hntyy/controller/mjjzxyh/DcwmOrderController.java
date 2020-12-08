@@ -82,6 +82,7 @@ public class DcwmOrderController {
         // 通过店铺ids & 日期 查询订单信息
         dcwmOrderQuery.setShopIds(shopIds);
         List<DcwmOrderRusult> orders = orderService.findOrderByShopIdsAndDate(dcwmOrderQuery);
+        List<DcwmOrderRusult> refundOrders = orderService.findRefundOrderByShopIdsAndDate(dcwmOrderQuery);
 
         /**
          * 组装数据：当日订单为空也要显示，所以按店铺维度进行分页
@@ -95,13 +96,29 @@ public class DcwmOrderController {
                 orders.stream().forEach(order -> {
                     // 可以使用.longValue()比较 long 类型。
                     if (order.getShopId().longValue() == shop.getShopId().longValue()){
-                        // 填充金额
-                        dcwmOrderRusult.setTotalPrices(order.getTotalPrices());
+                        // 填充
+                        dcwmOrderRusult.setTotalPrices(order.getTotalPrices());  //总金额
+                        dcwmOrderRusult.setOrderNums(order.getOrderNums());  //总订单量
+                        dcwmOrderRusult.setDeliveryFee(order.getDeliveryFee());  //总配送费
                     }
                 });
             }
             result.add(dcwmOrderRusult);
         });
+        if (!empty){
+            result.stream().forEach(r -> {
+                refundOrders.stream().forEach(refundOrder -> {
+                    if (refundOrder.getShopId().longValue() == r.getShopId().longValue()) {
+                        // 填充
+                        r.setValidTotalPrices(r.getTotalPrices().subtract(refundOrder.getRefundTotalPrices()));  // 有效总金额
+                        r.setValidOrderNums(r.getOrderNums()-refundOrder.getRefundOrderNums()); // 有效订单量
+                        r.setValidDeliveryFee(r.getDeliveryFee().subtract(refundOrder.getRefundDeliveryFee()));  // 有效配送费
+                        r.setRefundTotalPrices(refundOrder.getRefundTotalPrices());  // 退款金额
+                        r.setShopIncome(r.getValidTotalPrices().subtract(r.getValidDeliveryFee()));  // 店铺收入
+                    }
+                });
+            });
+        }
 
         // 统计总记录数
         int count = shopService.findShopCountByCanteenId(dcwmOrderQuery);

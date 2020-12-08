@@ -9,7 +9,7 @@
     <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <![endif]-->
-    <title>点餐外卖订单列表</title>
+    <title>点餐外卖订单</title>
 
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/webjars/bootstrap-table/1.16.0/bootstrap-table.min.css"/>
@@ -87,11 +87,32 @@
                     }
                 }, {
                     field: 'shopName',
-                    title: '店铺名称',
+                    title: '档口名称',
+
+                }, {
+                    field: 'validTotalPrices',
+                    title: '有效总金额',
 
                 }, {
                     field: 'totalPrices',
-                    title: '每日营业额',
+                    title: '总金额',
+
+                }, {
+                    field: 'refundTotalPrices',
+                    title: '退款金额',
+
+                }, {
+                    field: 'validOrderNums',
+                    title: '订单量',
+
+                }, {
+                    field: 'validDeliveryFee',
+                    title: '配送金额',
+
+                }, {
+                    field: 'shopIncome',
+                    title: '店铺收入',
+
                 }],
                 onLoadSuccess: function () {
                 },

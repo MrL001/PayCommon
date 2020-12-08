@@ -1,4 +1,4 @@
-package com.hntyy.controller.test;
+package com.hntyy.controller;
 
 import com.hntyy.entity.test.User;
 import com.hntyy.service.test.UserService;
@@ -13,20 +13,20 @@ import java.util.List;
  * User测试类（用于测试Springboot+thymeleaf+bootstrap+mybatis框架流程）
  */
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/home")
+public class HomeController {
 
     @Autowired
     private UserService userService;
 
     /**
-     * 查询列表
+     * 首页地址
      * @param mv
      * @return
      */
-    @RequestMapping("/findAll")
+    @RequestMapping("/index")
     public ModelAndView findAll(ModelAndView mv){
-        mv.setViewName("/test/userList");
+        mv.setViewName("/index");
         List<User> all = userService.findAll(new User());
         mv.addObject("all",all);
         return mv;

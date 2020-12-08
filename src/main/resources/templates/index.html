@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<html lang="en">
+<head>
+    <meta content="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>首页界面</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+    <style>
+        .mw-content{
+            border: 1px solid lightgray;
+            position: absolute;
+            left: 205px;
+            top: 55px;
+            right: 0px;
+            buttom: 0px;
+        }
+        .embed-responsive-16by9{
+            width: 100%;
+            height: 100%;
+            padding-bottom: 25px;
+        }
+    </style>
+    <script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            // 点击菜单，右侧出现相应界面
+            $(".menuset").on("click",function () {
+                $(".embed-responsive-item").attr('src',"login");
+            })
+        });
+    </script>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<ul class="mw-menubar-superadmin">
+    <li class="pull-left">
+        <ul class="pull-left">
+            <li>
+                <span class="glyphicon glyphicon-tree-conifer"></span>
+                <a class="menuset" href="javascript:void(0)">菜单设置</a>
+            </li>
+            <li><span class="glyphicon glyphicon-tree-conifer"></span><a href="javascript:void(0)">责任编辑设置</a></li>
+            <li><span class="glyphicon glyphicon-tree-conifer"></span><a href="">小说分类设置</a></li>
+            <li><span class="glyphicon glyphicon-tree-conifer"></span><a href="">其他设置</a></li>
+        </ul>
+    </li>
+</ul>
+
+<!-- 主题内容 -->
+<div class="mw-content">
+    <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" src="welcom"></iframe>
+    </div>
+</div>
+
+</body>
+</html>

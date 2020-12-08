@@ -19,4 +19,9 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.findOrderByShopIdsAndDate(dcwmOrderQuery);
     }
 
+    @Override
+    public List<DcwmOrderRusult> findRefundOrderByShopIdsAndDate(DcwmOrderQuery dcwmOrderQuery) {
+        return orderMapper.findRefundOrderByShopIdsAndDate(dcwmOrderQuery);
+    }
+
 }

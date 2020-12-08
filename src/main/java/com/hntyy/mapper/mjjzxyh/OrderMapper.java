@@ -11,9 +11,15 @@ import java.util.List;
 public interface OrderMapper {
 
     /**
-     * 通过店铺ids & 日期 查询订单信息
+     * 通过店铺ids & 日期 查询订单信息（总数据）
      * @return
      */
     List<DcwmOrderRusult> findOrderByShopIdsAndDate(DcwmOrderQuery dcwmOrderQuery);
+
+    /**
+     * 通过店铺ids & 日期 查询订单信息（退款数据）
+     * @return
+     */
+    List<DcwmOrderRusult> findRefundOrderByShopIdsAndDate(DcwmOrderQuery dcwmOrderQuery);
 
 }
