@@ -33,7 +33,7 @@ public class SensitiveWordsController {
 
     @RequestMapping("/index")
     public ModelAndView index(ModelAndView mv) {
-        mv.setViewName("/mjjzxyh/sensitiveWordsList");
+         mv.setViewName("/mjjzxyh/sensitiveWordsList");
         return mv;
     }
 

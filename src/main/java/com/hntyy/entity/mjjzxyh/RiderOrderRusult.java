@@ -29,6 +29,23 @@ public class RiderOrderRusult implements Serializable {
     private String riderName;
 
     /**
+     * 手机
+     */
+    @Excel(name = "手机", width = 25,orderNum = "1")
+    private String phone;
+
+    /**
+     * 学校id
+     */
+    @JsonSerialize(using= ToStringSerializer.class)
+    private Long schoolId;
+
+    /**
+     * 学校name
+     */
+    private String schoolName;
+
+    /**
      * 总订单量
      */
     @Excel(name = "总订单量", width = 25,orderNum = "2")

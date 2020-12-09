@@ -69,7 +69,9 @@
                         offset: params.offset,//从数据库第几条记录开始
                         limit: params.limit,//找多少条
                         queryDate: $("#queryDate").val(),
-                        queryRealName
+                        queryRealName: $("#queryRealName").val(),
+                        queryPhone: $("#queryPhone").val(),
+                        querySchoolId: $("#hiddenSchoolId").val()
                     };
                 },
                 responseHandler: function (res) {　//如果后台返回的json格式不是{rows:[{...},{...}],total:100},可以在这块处理成这样的格式　　　　　　return res;
@@ -87,6 +89,14 @@
                 }, {
                     field: 'riderName',
                     title: '姓名',
+
+                }, {
+                    field: 'phone',
+                    title: '手机',
+
+                }, {
+                    field: 'schoolName',
+                    title: '学校',
 
                 }, {
                     field: 'orderNums',
@@ -120,6 +130,12 @@
         function exportExcel () {
             window.location.href = "/riderOrder/exportRiderOrder?random="+Math.round(Math.random()*100);
         }
+
+        // 切换学校传递学校id
+        function selectSchool(value) {
+            $('#hiddenSchoolId').val(value);
+        }
+
     </script>
 
 </head>
@@ -130,6 +146,16 @@
     </div>
     <div class="panel-body">
         <div style="display:inline-block;">
+            <!-- 隐藏表单 id -->
+            <input type="hidden" id="hiddenSchoolId"/>
+            <div style="float:left;padding:6px;">
+                <span>学校：</span>
+            </div>
+            <div style="float:left;">
+                <select class="form-control" id="querySchoolId" onchange="selectSchool(value)">
+                    <option th:each="school:${schools}" th:text="${school.name}" th:value="${school.schoolId}"></option>
+                </select>
+            </div>
             <div style="float:left;padding:6px;margin-left:20px">
                 <span>姓名：</span>
             </div>

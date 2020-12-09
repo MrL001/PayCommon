@@ -2,31 +2,24 @@ package com.hntyy.controller.mjjzxyh;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.alibaba.fastjson.JSON;
-import com.hntyy.common.ExcelStyleUtil;
 import com.hntyy.entity.PageHelper;
 import com.hntyy.entity.mjjzxyh.*;
-import com.hntyy.service.mjjzxyh.CanteenService;
 import com.hntyy.service.mjjzxyh.OrderService;
 import com.hntyy.service.mjjzxyh.SchoolService;
-import com.hntyy.service.mjjzxyh.ShopService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 根据骑手维度统计订单
@@ -40,20 +33,18 @@ public class RiderOrderController {
     private SchoolService schoolService;
 
     @Autowired
-    private CanteenService canteenService;
-
-    @Autowired
-    private ShopService shopService;
-
-    @Autowired
     private OrderService orderService;
 
     // 全局变量，用于导出获取，减少查询次数
     private List<RiderOrderRusult> riderOrderRusults = new ArrayList<>();
+    private List<SchoolEntity> schools = new ArrayList<>();
 
     @RequestMapping("/index")
     public ModelAndView index(ModelAndView mv) {
         mv.setViewName("/mjjzxyh/riderOrderList");
+        // 查询所有学校（用于下拉框）
+        schools = schoolService.findAll();
+        mv.addObject("schools",schools);
         return mv;
     }
 
@@ -64,6 +55,9 @@ public class RiderOrderController {
         riderOrderRusults = new ArrayList<>();
 
         PageHelper<RiderOrderRusult> pageHelper = new PageHelper();
+        if (riderOrderQuery.getQuerySchoolId() == null){
+            riderOrderQuery.setQuerySchoolId(schools.get(0).getSchoolId());
+        }
         // 查骑手订单
         riderOrderRusults = orderService.findOrderByRiderAccount(riderOrderQuery);
         int count = orderService.findOrderCountByRiderAccount(riderOrderQuery);
