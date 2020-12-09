@@ -100,10 +100,12 @@
         }
 
         function addOnclick() {
+            $("#exampleModalLabel").text("新增敏感词");
             $("#myModal").modal("toggle");
         }
 
         function editOnclick(id,word) {
+            $("#exampleModalLabel").text("编辑敏感词");
             $('#addWords').val(word);
             $('#addId').val(id);
             $("#myModal").modal("toggle");
