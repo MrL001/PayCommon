@@ -16,6 +16,16 @@ import java.util.List;
 public class RiderOrderQuery extends Page {
 
     /**
+     * 姓名
+     */
+    private String queryRealName;
+
+    /**
+     * 手机号
+     */
+    private String queryPhone;
+
+    /**
      * 查询日期
      */
     @JsonSerialize(using= ToStringSerializer.class)

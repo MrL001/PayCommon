@@ -14,6 +14,12 @@ import java.util.List;
 public interface SensitiveWordsMapper {
 
     /**
+     * 查所有
+     * @return
+     */
+    List<SensitiveWordsEntity> findAllSensitiveWords();
+
+    /**
      * 查询所有关键词
      * @return
      */

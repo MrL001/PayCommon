@@ -4,6 +4,7 @@ import com.hntyy.entity.mjjzxyh.SensitiveWordsEntity;
 import com.hntyy.entity.mjjzxyh.SensitiveWordsQuery;
 import com.hntyy.service.mjjzxyh.SensitiveWordsService;
 import com.hntyy.service.mjjzxyh.SensitiveWordsServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -22,6 +23,7 @@ import java.util.*;
  * @Description: 初始化敏感词库，将敏感词加入到HashMap中，构建DFA算法模型
  * @version 1.0
  */
+@Slf4j
 public class SensitiveWordInit {
 
 	private String ENCODING = "UTF-8";    //字符编码
@@ -39,7 +41,9 @@ public class SensitiveWordInit {
 			//读取敏感词库
 			List<SensitiveWordsEntity> all = (List<SensitiveWordsEntity>) redisUtil.get("sensitiveWords");
 			if (CollectionUtils.isEmpty(all)){
-				all = sensitiveWordsService.findAll(new SensitiveWordsQuery());
+				all = sensitiveWordsService.findAllSensitiveWords();
+				boolean sensitiveWords = redisUtil.set("sensitiveWords", all);
+				log.info("敏感词保存结果："+sensitiveWords);
 			}
 			Set<String> keyWordSet = new HashSet<>();
 			all.stream().forEach(sensitiveWordsEntity -> keyWordSet.add(sensitiveWordsEntity.getWord()));

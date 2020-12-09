@@ -15,6 +15,11 @@ public class SensitiveWordsServiceImpl implements SensitiveWordsService {
 
 
     @Override
+    public List<SensitiveWordsEntity> findAllSensitiveWords() {
+        return sensitiveWordsMapper.findAllSensitiveWords();
+    }
+
+    @Override
     public List<SensitiveWordsEntity> findAll(SensitiveWordsQuery sensitiveWordsQuery) {
         return sensitiveWordsMapper.findAll(sensitiveWordsQuery);
     }
