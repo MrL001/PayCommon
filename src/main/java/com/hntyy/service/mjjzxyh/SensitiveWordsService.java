@@ -18,4 +18,11 @@ public interface SensitiveWordsService {
      */
     int findAllCount(SensitiveWordsQuery sensitiveWordsQuery);
 
+    void save(SensitiveWordsEntity sensitiveWordsEntity);
+
+    void update(SensitiveWordsEntity sensitiveWordsEntity);
+
+    void deleteById(Integer id);
+
+    void batchDelete(List<Integer> ids);
 }

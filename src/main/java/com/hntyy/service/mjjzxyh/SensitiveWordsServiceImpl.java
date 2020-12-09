@@ -24,4 +24,24 @@ public class SensitiveWordsServiceImpl implements SensitiveWordsService {
         return sensitiveWordsMapper.findAllCount(sensitiveWordsQuery);
     }
 
+    @Override
+    public void save(SensitiveWordsEntity sensitiveWordsEntity) {
+        sensitiveWordsMapper.save(sensitiveWordsEntity);
+    }
+
+    @Override
+    public void update(SensitiveWordsEntity sensitiveWordsEntity) {
+        sensitiveWordsMapper.update(sensitiveWordsEntity);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        sensitiveWordsMapper.deleteById(id);
+    }
+
+    @Override
+    public void batchDelete(List<Integer> ids) {
+        sensitiveWordsMapper.batchDelete(ids);
+    }
+
 }

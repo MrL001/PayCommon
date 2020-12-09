@@ -1,6 +1,7 @@
 package com.hntyy.controller.mjjzxyh;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.hntyy.common.RedisUtil;
 import com.hntyy.common.SensitivewordFilter;
 import com.hntyy.entity.PageHelper;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -43,6 +47,62 @@ public class SensitiveWordsController {
         pageHelper.setTotal(count);
         pageHelper.setRows(all);
         return JSON.toJSONString(pageHelper);
+    }
+
+    @RequestMapping("/saveSensitiveWords")
+    @ResponseBody
+    public String saveSensitiveWords(HttpServletRequest request) {
+        SensitiveWordsEntity sensitiveWordsEntity = new SensitiveWordsEntity();
+        String word = request.getParameter("word");
+        String id = request.getParameter("id");
+        if (id != null && !"".equals(id)){
+            sensitiveWordsEntity.setId(Integer.parseInt(id));
+        }
+        sensitiveWordsEntity.setWord(word);
+        try {
+            if (id == null || "".equals(id)){
+                sensitiveWordsService.save(sensitiveWordsEntity);
+            } else {
+                sensitiveWordsService.update(sensitiveWordsEntity);
+            }
+            return "success";
+        } catch (Exception e) {
+            log.error("保存敏感词失败， sensitiveWordsEntity：{}" , JSON.toJSONString(sensitiveWordsEntity),e);
+            return "false";
+        }
+    }
+
+    @RequestMapping("/deleteSensitiveWords")
+    @ResponseBody
+    public String deleteSensitiveWords(HttpServletRequest request) {
+        String targetID = request.getParameter("targetID");
+        int id = Integer.parseInt(targetID);
+        try {
+            sensitiveWordsService.deleteById(id);
+            return "success";
+        } catch (Exception e) {
+            log.error("删除敏感词失败，id:{} " ,targetID,e);
+            return "false";
+        }
+    }
+
+    @RequestMapping("/batchDelete")
+    @ResponseBody
+    public String batchDelete(HttpServletRequest request) {
+        List<Integer> ids = new ArrayList<>();
+        String idStr = request.getParameter("idArray");
+        JSONArray id_array = JSON.parseArray(idStr);
+        for (int i = 0; i < id_array.size(); i++) {
+            int id = (int) id_array.get(i);
+            ids.add(id);
+        }
+        try {
+            sensitiveWordsService.batchDelete(ids);
+            return "success";
+        } catch (Exception e) {
+            log.error("批量删除敏感词失败，id:{} " ,JSON.toJSONString(ids),e);
+            return "false";
+        }
     }
 
     /**

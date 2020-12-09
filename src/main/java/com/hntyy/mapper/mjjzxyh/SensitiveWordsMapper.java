@@ -3,6 +3,7 @@ package com.hntyy.mapper.mjjzxyh;
 import com.hntyy.entity.mjjzxyh.SensitiveWordsEntity;
 import com.hntyy.entity.mjjzxyh.SensitiveWordsQuery;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +25,11 @@ public interface SensitiveWordsMapper {
      */
     int findAllCount(SensitiveWordsQuery sensitiveWordsQuery);
 
+    void save(SensitiveWordsEntity sensitiveWordsEntity);
+
+    void update(SensitiveWordsEntity sensitiveWordsEntity);
+
+    void deleteById(@Param("id")Integer id);
+
+    void batchDelete(@Param("ids")List<Integer> ids);
 }

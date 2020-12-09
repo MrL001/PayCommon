@@ -73,14 +73,7 @@
                     return res;
                 },
                 columns: [{
-                    title: '序号',
-                    field: '',
-                    align: 'center',
-                    formatter: function (value, row, index) {
-                        var pageSize = $('#myTable').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
-                        var pageNumber = $('#myTable').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
-                        return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
-                    }
+                    checkbox: true
                 }, {
                     field: 'id',
                     title: 'id',
@@ -89,6 +82,14 @@
                     field: 'word',
                     title: '敏感词',
 
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function operateFormatter(value, row, index) {
+                        var d = '<button href="#" class="btn btn-warning"  onclick="editOnclick(\'' + row.id + '\',\'' + row.word + '\')">编辑</button> ' +
+                            '<button href="#" class="btn btn-danger" style="margin-left: 20px"  onclick="deleteOne(\'' + row.id + '\')">删除</button>';
+                        return d;
+                    }
                 }],
                 onLoadSuccess: function () {
                 },
@@ -96,6 +97,118 @@
                     alert("数据加载失败！");
                 }
             });
+        }
+
+        function addOnclick() {
+            $("#myModal").modal("toggle");
+        }
+
+        function editOnclick(id,word) {
+            $('#addWords').val(word);
+            $('#addId').val(id);
+            $("#myModal").modal("toggle");
+        }
+
+        function closeModal() {
+            $('#addId').val("");
+            $('#addWords').val("");
+        }
+
+        // 保存数据
+        function operateSave() {
+            if ($('#addWords').val() == undefined || $.trim($('#addWords').val()) == "") {
+                $("#errorMSG").html("敏感词不能为空");
+            } else {
+                $('#errorMSG').html("");
+                $.ajax({
+                    url: "/sensitiveWords/saveSensitiveWords",
+                    type: "post",
+                    data: {
+                        "id": $.trim($('#addId').val()),
+                        "word": $.trim($('#addWords').val()),
+                    },
+                    success: function (status) {
+                        alert('保存成功');
+                        $('#myModal').modal('hide');
+                        $('#addId').val("");
+                        $('#addWords').val("");
+                        $('#errorMSG').html("");
+                        $("#myTable").bootstrapTable('refresh');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        /*弹出jqXHR对象的信息*/
+                        alert('error ajax请求被拒绝:  ' +
+                            '\n jqXHR.responseText: ' + jqXHR.responseText +
+                            '\n jqXHR.status: ' + jqXHR.status +
+                            '\n jqXHR.readyState: ' + jqXHR.readyState +
+                            '\n jqXHR.statusText: ' + jqXHR.statusText +
+                            '\n textStatus: ' + textStatus +
+                            "\n errorThrown:" +errorThrown);
+                    }
+                });
+            }
+        }
+
+        //单行删除
+        function deleteOne(targetID) {
+            if (confirm("确定要删除吗？")) {
+                $.ajax({
+                    url: "/sensitiveWords/deleteSensitiveWords",
+                    type: "post",
+                    data: {
+                        "targetID": targetID
+                    },
+                    success: function (status) {
+                        alert("删除敏感词成功");
+                        $("#myTable").bootstrapTable('refresh');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        /*弹出jqXHR对象的信息*/
+                        alert('error ajax请求被拒绝:  ' +
+                            '\n jqXHR.responseText: ' + jqXHR.responseText +
+                            '\n jqXHR.status: ' + jqXHR.status +
+                            '\n jqXHR.readyState: ' + jqXHR.readyState +
+                            '\n jqXHR.statusText: ' + jqXHR.statusText +
+                            '\n textStatus: ' + textStatus +
+                            "\n errorThrown:" +errorThrown);
+                    }
+                });
+            }
+        }
+        
+        // 批量删除
+        function batchDelete() {
+            var selectId = $.map($("#myTable").bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+            if (selectId.length <= 0) {
+                alert("请选中至少一行");
+            } else {
+                if (confirm("确定要删除吗？")) {
+                    var data = JSON.stringify(selectId);
+                    $.ajax({
+                        url: "/sensitiveWords/batchDelete",
+                        type: "post",
+                        data: {
+                            "idArray": data
+                        },
+                        success: function (status) {
+                            alert("删除敏感词成功");
+                            $("#myTable").bootstrapTable('refresh');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            /*弹出jqXHR对象的信息*/
+                            alert('error ajax请求被拒绝:  ' +
+                                '\n jqXHR.responseText: ' + jqXHR.responseText +
+                                '\n jqXHR.status: ' + jqXHR.status +
+                                '\n jqXHR.readyState: ' + jqXHR.readyState +
+                                '\n jqXHR.statusText: ' + jqXHR.statusText +
+                                '\n textStatus: ' + textStatus +
+                                "\n errorThrown:" +errorThrown);
+                        }
+                    });
+                }
+            }
         }
 
     </script>
@@ -117,12 +230,55 @@
             <div style="float:left;margin-left:20px;">
                 <button id="queryBtn" class="btn btn-primary">查询</button>
             </div>
+            <div style="float:left;margin-left:10px;">
+                <button type="button" class="btn btn-primary " id="add" onclick="addOnclick()">新增</button>
+            </div>
+<!--            <div style="float:left;margin-left:10px;">-->
+<!--                <button type="button" class="btn btn-warning" id="edit" onclick="editOnclick()">编辑</button>-->
+<!--            </div>-->
+            <div style="float:left;margin-left:10px;">
+                <button type="button" class="btn btn-danger " id="delete" onclick="batchDelete()">删除</button>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="ibox-content">
     <table id="myTable"></table>
+</div>
+
+<!--增加modal-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-backdrop="static">
+    <div class="modal-dialog" style="width:560px;height: 220px;top: 20px;right: 40px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">新增敏感词</h4>
+            </div>
+            <div class="modal-body">
+                <!-- 隐藏表单 id -->
+                <input type="hidden" id="addId">
+                <div class="form-group row" id="modal-row">
+                    <div class="form-group col-md-6">
+                        <label for="addWords" class="control-label">敏感词</label>
+                        <input type="text" name="addWords" class="form-control" id="addWords">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <font id="errorMSG" color="red"></font>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeModal()">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭
+                    </button>
+                    <button type="button" id="btn_submit" class="btn btn-primary" onclick="operateSave()">
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div th:replace="foot::footer"></div>

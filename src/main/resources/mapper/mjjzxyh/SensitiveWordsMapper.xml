@@ -24,4 +24,24 @@
         </if>
     </select>
 
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sensitive_words(`word`) values (#{word})
+    </insert>
+
+    <update id="update">
+        update t_sensitive_words set `word`=#{word} where id=#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+		delete from t_sensitive_words where id=#{id}
+	</delete>
+
+    <delete id="batchDelete" parameterType="int">
+        delete from t_sensitive_words
+        where id IN
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
 </mapper>
