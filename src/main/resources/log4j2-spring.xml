@@ -11,7 +11,7 @@
         <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
         <!-- 定义日志存储的路径 -->
         <property name="FILE_PATH" value="D:/logs" />  <!-- 更换为你的日志路径 -->
-        <property name="FILE_NAME" value="payCommon" />  <!-- 更换为你的项目名 -->
+        <property name="FILE_NAME" value="thirdProject" />  <!-- 更换为你的项目名 -->
     </Properties>
 
     <appenders>
