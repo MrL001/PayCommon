@@ -24,7 +24,10 @@
             </foreach>
         </if>
         <if test="queryDate != null and queryDate != ''">
-            AND DATE_FORMAT(payment_date, '%Y-%m-%d') = #{queryDate}
+            AND DATE_FORMAT(payment_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
         </if>
         GROUP BY shop_id
     </select>
@@ -52,7 +55,10 @@
             </foreach>
         </if>
         <if test="queryDate != null and queryDate != ''">
-            AND DATE_FORMAT(payment_date, '%Y-%m-%d') = #{queryDate}
+            AND DATE_FORMAT(payment_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
         </if>
         GROUP BY shop_id
     </select>

@@ -35,7 +35,11 @@ public class DcwmOrderQuery extends Page {
     /**
      * 查询日期
      */
-    @JsonSerialize(using= ToStringSerializer.class)
     private String queryDate;
+
+    /**
+     * 结束时间
+     */
+    private String queryEndDate;
 
 }

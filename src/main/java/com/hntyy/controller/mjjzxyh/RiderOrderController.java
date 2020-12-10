@@ -53,8 +53,7 @@ public class RiderOrderController {
 
     @RequestMapping("/findAll")
     @ResponseBody
-    public String findAll(RiderOrderQuery riderOrderQuery, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    public String findAll(RiderOrderQuery riderOrderQuery) {
         // 清除数据
         riderOrderRusults = new ArrayList<>();
 
