@@ -34,4 +34,10 @@ public interface OrderMapper {
      */
     int findOrderCountByRiderAccount(RiderOrderQuery riderOrderQuery);
 
+    /**
+     * 查询所有订单量
+     * @return
+     */
+    int findOrderSumsByRiderAccount(RiderOrderQuery riderOrderQuery);
+
 }

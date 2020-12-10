@@ -14,4 +14,10 @@ public class PageHelper<T> {
     // 数据总条数
     private int total;
 
+    /**
+     * 根据需求自定义参数
+     */
+    // 订单总量
+    private int orderSums;
+
 }

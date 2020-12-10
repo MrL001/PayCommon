@@ -31,6 +31,11 @@ public class RiderOrderQuery extends Page {
     private String queryDate;
 
     /**
+     * 结束时间
+     */
+    private String queryEndDate;
+
+    /**
      * 学校id
      */
     @JsonSerialize(using= ToStringSerializer.class)

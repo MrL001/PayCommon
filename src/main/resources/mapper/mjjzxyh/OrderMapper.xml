@@ -76,7 +76,10 @@
         AND
             o.payment_date is not null
         <if test="queryDate != null and queryDate != ''">
-            AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') = #{queryDate}
+            AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
         </if>
         <if test="queryRealName != null and queryRealName != ''">
             AND account.realname LIKE CONCAT('%',#{queryRealName},'%')
@@ -110,7 +113,10 @@
             AND
                 o.payment_date is not null
             <if test="queryDate != null and queryDate != ''">
-                AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') = #{queryDate}
+                AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') &gt;= #{queryDate}
+            </if>
+            <if test="queryEndDate != null and queryEndDate != ''">
+                AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
             </if>
             <if test="queryRealName != null and queryRealName != ''">
                 AND account.realname LIKE CONCAT('%',#{queryRealName},'%')
@@ -123,6 +129,34 @@
             </if>
             GROUP BY account.`account_id`
         ) temp
+    </select>
+    <!-- 查询所有订单量 -->
+    <select id="findOrderSumsByRiderAccount" resultType="int">
+        SELECT
+            COUNT(account.account_id)
+        FROM
+            account_tb account
+        LEFT JOIN order_tb o ON account.`account_id`=o.`rider_account_id`
+        WHERE
+            -- 骑手
+            account.role_id='1004'
+        AND
+            o.payment_date is not null
+        <if test="queryDate != null and queryDate != ''">
+            AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(o.payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
+        </if>
+        <if test="queryRealName != null and queryRealName != ''">
+            AND account.realname LIKE CONCAT('%',#{queryRealName},'%')
+        </if>
+        <if test="queryPhone != null and queryPhone != ''">
+            AND account.phone LIKE CONCAT('%',#{queryPhone},'%')
+        </if>
+        <if test="querySchoolId != null and querySchoolId != ''">
+            AND account.`school_id`=#{querySchoolId}
+        </if>
     </select>
 
 </mapper>

@@ -36,4 +36,9 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.findOrderCountByRiderAccount(riderOrderQuery);
     }
 
+    @Override
+    public int findOrderSumsByRiderAccount(RiderOrderQuery riderOrderQuery) {
+        return orderMapper.findOrderSumsByRiderAccount(riderOrderQuery);
+    }
+
 }

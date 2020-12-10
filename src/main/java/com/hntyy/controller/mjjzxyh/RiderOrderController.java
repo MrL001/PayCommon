@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +53,8 @@ public class RiderOrderController {
 
     @RequestMapping("/findAll")
     @ResponseBody
-    public String findAll(RiderOrderQuery riderOrderQuery) {
+    public String findAll(RiderOrderQuery riderOrderQuery, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         // 清除数据
         riderOrderRusults = new ArrayList<>();
 
@@ -63,6 +67,11 @@ public class RiderOrderController {
         int count = orderService.findOrderCountByRiderAccount(riderOrderQuery);
         pageHelper.setTotal(count);
         pageHelper.setRows(riderOrderRusults);
+
+        // 总订单
+        int orderSums = orderService.findOrderSumsByRiderAccount(riderOrderQuery);
+        pageHelper.setOrderSums(orderSums);
+
         return JSON.toJSONString(pageHelper);
     }
 

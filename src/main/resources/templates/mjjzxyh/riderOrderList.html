@@ -69,12 +69,15 @@
                         offset: params.offset,//从数据库第几条记录开始
                         limit: params.limit,//找多少条
                         queryDate: $("#queryDate").val(),
+                        queryEndDate: $("#queryEndDate").val(),
                         queryRealName: $("#queryRealName").val(),
                         queryPhone: $("#queryPhone").val(),
                         querySchoolId: $("#hiddenSchoolId").val()
                     };
                 },
                 responseHandler: function (res) {　//如果后台返回的json格式不是{rows:[{...},{...}],total:100},可以在这块处理成这样的格式　　　　　　return res;
+                    // 填充总数
+                    document.getElementById("orderSums").innerHTML=res.orderSums;
                     return res;
                 },
                 columns: [{
@@ -122,8 +125,26 @@
                 autoclose: true,//选中自动关闭
                 clearBtn: true,//自定义属性,true 显示 清空按钮 false 隐藏 默认:true
                 todayBtn: true//显示今日按钮
+            }).on("changeDate",function(){
+                $("#queryEndDate").datetimepicker("setStartDate",""+$("#queryDate").val());
+                console.log("#queryDate的changeDate事件给#queryEndDate设置开始日期setStartDate==========执行完毕");
             });
             // $("#queryDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
+            $('#queryEndDate').datetimepicker({
+                bootcssVer: 3,
+                forceParse: 0,//设置为0，时间不会跳转1899，会显示当前时间。
+                language: 'zh-CN',//显示中文
+                format: 'yyyy-mm-dd',//显示格式
+                minView: "month",//设置只显示到月份
+                initialDate: new Date(),//初始化当前日期
+                autoclose: true,//选中自动关闭
+                clearBtn: true,//自定义属性,true 显示 清空按钮 false 隐藏 默认:true
+                todayBtn: true//显示今日按钮
+            }).on("changeDate",function(){
+                $("#queryDate").datetimepicker("setEndDate",""+$("#queryEndDate").val());
+                console.log("#queryEndDate的changeDate事件给queryDate设置结束日期setEndDate============执行完毕");
+            });
+            // $("#queryEndDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
         }
 
         // 导出Excel
@@ -174,6 +195,9 @@
             <div style="float:left;">
                 <input type="text" name="date" class="form-control" id="queryDate">
             </div>
+            <div style="float:left;margin-left: 5px">
+                <input type="text" name="date" class="form-control" id="queryEndDate">
+            </div>
             <div style="float:left;margin-left:20px;">
                 <button id="queryBtn" class="btn btn-primary">查询</button>
             </div>
@@ -186,6 +210,10 @@
 
 <div class="ibox-content">
     <table id="myTable"></table>
+</div>
+
+<div style="margin-top: 10px">
+    总订单量：<span id="orderSums"></span>
 </div>
 
 <div th:replace="foot::footer"></div>
