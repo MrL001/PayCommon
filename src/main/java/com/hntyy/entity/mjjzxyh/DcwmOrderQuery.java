@@ -42,4 +42,9 @@ public class DcwmOrderQuery extends Page {
      */
     private String queryEndDate;
 
+    /**
+     * 配送方式，1配送，2自取
+     */
+    private Integer deliveryMode;
+
 }

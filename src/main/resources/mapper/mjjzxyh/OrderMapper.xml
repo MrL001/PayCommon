@@ -29,6 +29,10 @@
         <if test="queryEndDate != null and queryEndDate != ''">
             AND DATE_FORMAT(payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
         </if>
+        <if test="deliveryMode != null">
+            -- 配送方式 1：配送 2：自取
+            AND delivery_mode=#{deliveryMode}
+        </if>
         GROUP BY shop_id
     </select>
     <!-- 查询退款数据-->
@@ -59,6 +63,10 @@
         </if>
         <if test="queryEndDate != null and queryEndDate != ''">
             AND DATE_FORMAT(payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
+        </if>
+        <if test="deliveryMode != null">
+            -- 配送方式 1：配送 2：自取
+            AND delivery_mode=#{deliveryMode}
         </if>
         GROUP BY shop_id
     </select>

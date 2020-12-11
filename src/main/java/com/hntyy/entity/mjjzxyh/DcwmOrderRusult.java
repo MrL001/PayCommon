@@ -37,7 +37,7 @@ public class DcwmOrderRusult implements Serializable {
     private BigDecimal totalPrices = BigDecimal.ZERO;
 
     /**
-     * 退款总金额 默认值：
+     * 退款总金额
      */
     @Excel(name = "退款金额", width = 25,orderNum = "4")
     private BigDecimal refundTotalPrices = BigDecimal.ZERO;
@@ -54,15 +54,22 @@ public class DcwmOrderRusult implements Serializable {
     private int orderNums;
 
     /**
-     * 退款总订单量
+     * 退款订单量
      */
+    @Excel(name = "退款订单量", width = 25,orderNum = "5")
     private int refundOrderNums;
 
     /**
      * 有效总订单量  总订单量-退款总订单量
      */
-    @Excel(name = "订单量", width = 25,orderNum = "5")
+    @Excel(name = "有效订单量", width = 25,orderNum = "6")
     private int validOrderNums;
+
+    /**
+     * 配送订单量
+     */
+    @Excel(name = "有效配送订单量", width = 25,orderNum = "7")
+    private int  deliveryOrderNums;
 
     /**
      * 总配送费
@@ -77,13 +84,13 @@ public class DcwmOrderRusult implements Serializable {
     /**
      * 有效总配送费   总配送费-退款总配送费
      */
-    @Excel(name = "配送金额", width = 25,orderNum = "6")
+    @Excel(name = "有效配送金额", width = 25,orderNum = "8")
     private BigDecimal validDeliveryFee = BigDecimal.ZERO;
 
     /**
      * 店铺收入  有效总金额-有效总配送费
      */
-    @Excel(name = "店铺收入", width = 25,orderNum = "7")
+    @Excel(name = "店铺收入", width = 25,orderNum = "9")
     private BigDecimal shopIncome = BigDecimal.ZERO;
 
 }

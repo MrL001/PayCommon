@@ -118,6 +118,7 @@ public class DcwmOrderController {
                         r.setValidOrderNums(r.getOrderNums()-refundOrder.getRefundOrderNums()); // 有效订单量
                         r.setValidDeliveryFee(r.getDeliveryFee().subtract(refundOrder.getRefundDeliveryFee()));  // 有效配送费
                         r.setRefundTotalPrices(refundOrder.getRefundTotalPrices());  // 退款金额
+                        r.setRefundOrderNums(refundOrder.getRefundOrderNums());
                         r.setShopIncome(r.getValidTotalPrices().subtract(r.getValidDeliveryFee()));  // 店铺收入
                     }
                 });
@@ -128,6 +129,52 @@ public class DcwmOrderController {
                     r.setValidDeliveryFee(r.getDeliveryFee());  // 有效配送费
                     r.setShopIncome(r.getValidTotalPrices().subtract(r.getValidDeliveryFee()));  // 店铺收入
                 }
+            });
+        }
+
+        /**
+         * 设置配送订单量
+         */
+        dcwmOrderQuery.setDeliveryMode(1);
+        // 总配送订单
+        List<DcwmOrderRusult> deliveOrders = orderService.findOrderByShopIdsAndDate(dcwmOrderQuery);
+        // 退款总配送订单
+        List<DcwmOrderRusult> refundDeliveryOrders = orderService.findRefundOrderByShopIdsAndDate(dcwmOrderQuery);
+        boolean emptyDelive = CollectionUtils.isEmpty(deliveOrders);
+        boolean refundDelivery = CollectionUtils.isEmpty(refundDeliveryOrders);
+        // 用于统计配送订单
+        List<DcwmOrderRusult> deliveList = new ArrayList<>();
+        if (!emptyDelive){
+            if (refundDelivery){
+                deliveOrders.stream().forEach(d -> {
+                    result.stream().forEach(order -> {
+                        if (order.getShopId().longValue() == d.getShopId().longValue()){
+                            order.setDeliveryOrderNums(d.getOrderNums());
+                        }
+                    });
+                });
+            } else {
+                deliveOrders.stream().forEach(d -> {
+                    DcwmOrderRusult dcwmOrderRusult = new DcwmOrderRusult();
+                    dcwmOrderRusult.setShopId(d.getShopId());
+                    dcwmOrderRusult.setDeliveryOrderNums(d.getOrderNums());
+                    deliveList.add(dcwmOrderRusult);
+                    refundDeliveryOrders.stream().forEach(r -> {
+                        if (r.getShopId().longValue() == d.getShopId().longValue()){
+                            dcwmOrderRusult.setDeliveryOrderNums(d.getOrderNums()-r.getRefundOrderNums());
+                        }
+                    });
+                });
+            }
+        }
+        // 如果退款不为空赋值
+        if (!refundDelivery){
+            result.stream().forEach(order -> {
+                deliveList.stream().forEach(d -> {
+                    if (order.getShopId().longValue() == d.getShopId().longValue()){
+                        order.setDeliveryOrderNums(d.getDeliveryOrderNums());
+                    }
+                });
             });
         }
 
