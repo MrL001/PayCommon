@@ -76,6 +76,9 @@ public class TurnoverCountController {
 
         // 统计信息
         result = shopTurnoverCountService.findTurnoverByCanteenId(dcwmOrderQuery);
+        if (CollectionUtils.isEmpty(result)){
+            return JSON.toJSONString(pageHelper);
+        }
 
         // 总统计
         DcwmOrderRusult dcwmOrderRusult = shopTurnoverCountService.findTurnoverByCanteenIdCount(dcwmOrderQuery);
