@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 营业额统计
@@ -38,12 +37,6 @@ public class TurnoverCountController {
 
     @Autowired
     private CanteenService canteenService;
-
-    @Autowired
-    private ShopService shopService;
-
-    @Autowired
-    private OrderService orderService;
 
     @Autowired
     private ShopTurnoverCountService shopTurnoverCountService;

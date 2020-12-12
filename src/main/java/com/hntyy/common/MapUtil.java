@@ -3,7 +3,6 @@ package com.hntyy.common;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import com.hntyy.entity.test.Person;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -81,14 +80,7 @@ public class MapUtil {
 
     // 测试对象转map，map按key升序，map转换成url参数
     public static void main(String[] args) {
-        log.error("Something else is wrong here");
-        Person person = new Person();
-        person.setSex("男");
-        person.setAge(26);
-        Map map = MapUtil.objectToMap(person);
-        Map map1 = MapUtil.sortMapByKey(map);
-        String urlParamsByMap = MapUtil.getUrlParamsByMap(map1);
-        System.out.println(urlParamsByMap);
+
     }
 
 }

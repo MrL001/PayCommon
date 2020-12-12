@@ -1,6 +1,5 @@
 package com.hntyy.scheduled;
 
-import com.hntyy.common.DateUtil;
 import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
 import com.hntyy.entity.mjjzxyh.DcwmOrderRusult;
 import com.hntyy.entity.mjjzxyh.ShopEntity;
@@ -10,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
