@@ -40,4 +40,16 @@ public interface OrderService {
      */
     int findOrderSumsByRiderAccount(RiderOrderQuery riderOrderQuery);
 
+    /**
+     * 查询总的数据 不分组
+     * @return
+     */
+    DcwmOrderRusult findOrderByShopIdsAndDateNotGroup(DcwmOrderQuery dcwmOrderQuery);
+
+    /**
+     * 查询退款数据 不分组
+     * @return
+     */
+    DcwmOrderRusult findRefundOrderByShopIdsAndDateNotGroup(DcwmOrderQuery dcwmOrderQuery);
+
 }

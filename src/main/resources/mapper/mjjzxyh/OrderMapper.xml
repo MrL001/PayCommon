@@ -11,7 +11,9 @@
             -- 总金额
             SUM(total_price) totalPrices,
             -- 总配送金额
-            SUM(delivery_fee) deliveryFee
+            SUM(delivery_fee) deliveryFee,
+            -- 优惠券使用金额
+            SUM(coupon_money) couponMoney
         FROM
             order_tb
         WHERE
@@ -44,7 +46,9 @@
             -- 退款总金额
             SUM(total_price) refundTotalPrices,
             -- 退款配送金额
-            SUM(delivery_fee) refundDeliveryFee
+            SUM(delivery_fee) refundDeliveryFee,
+            -- 退款优惠券使用金额
+            SUM(coupon_money) refundCouponMoney
         FROM
             order_tb
         WHERE
@@ -69,6 +73,76 @@
             AND delivery_mode=#{deliveryMode}
         </if>
         GROUP BY shop_id
+    </select>
+    <!-- 查询总的数据 不分组-->
+    <select id="findOrderByShopIdsAndDateNotGroup" resultType="com.hntyy.entity.mjjzxyh.DcwmOrderRusult">
+        SELECT
+        shop_id shopId,
+        -- 总订单量
+        COUNT(shop_id) orderNums,
+        -- 总金额
+        SUM(total_price) totalPrices,
+        -- 总配送金额
+        SUM(delivery_fee) deliveryFee,
+        -- 优惠券使用金额
+        SUM(coupon_money) couponMoney
+        FROM
+        order_tb
+        WHERE
+        -- 所有订单都按支付时间走
+        payment_date is not null
+        <if test="shopIds!=null and shopIds.size() &gt; 0">
+            AND shop_id IN
+            <foreach item="item" index="index" collection="shopIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryDate != null and queryDate != ''">
+            AND DATE_FORMAT(payment_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
+        </if>
+        <if test="deliveryMode != null">
+            -- 配送方式 1：配送 2：自取
+            AND delivery_mode=#{deliveryMode}
+        </if>
+    </select>
+    <!-- 查询退款数据 不分组-->
+    <select id="findRefundOrderByShopIdsAndDateNotGroup" resultType="com.hntyy.entity.mjjzxyh.DcwmOrderRusult">
+        SELECT
+        shop_id shopId,
+        -- 退款订单量
+        COUNT(shop_id) refundOrderNums,
+        -- 退款总金额
+        SUM(total_price) refundTotalPrices,
+        -- 退款配送金额
+        SUM(delivery_fee) refundDeliveryFee,
+        -- 退款优惠券使用金额
+        SUM(coupon_money) refundCouponMoney
+        FROM
+        order_tb
+        WHERE
+        -- 退款数据
+        `status`=10
+        AND
+        payment_date is not null
+        <if test="shopIds!=null and shopIds.size() &gt; 0">
+            AND shop_id IN
+            <foreach item="item" index="index" collection="shopIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryDate != null and queryDate != ''">
+            AND DATE_FORMAT(payment_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(payment_date, '%Y-%m-%d') &lt;= #{queryEndDate}
+        </if>
+        <if test="deliveryMode != null">
+            -- 配送方式 1：配送 2：自取
+            AND delivery_mode=#{deliveryMode}
+        </if>
     </select>
 
     <!-- 通过骑手查订单 -->

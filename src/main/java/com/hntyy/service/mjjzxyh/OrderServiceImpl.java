@@ -41,4 +41,14 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.findOrderSumsByRiderAccount(riderOrderQuery);
     }
 
+    @Override
+    public DcwmOrderRusult findOrderByShopIdsAndDateNotGroup(DcwmOrderQuery dcwmOrderQuery) {
+        return orderMapper.findOrderByShopIdsAndDateNotGroup(dcwmOrderQuery);
+    }
+
+    @Override
+    public DcwmOrderRusult findRefundOrderByShopIdsAndDateNotGroup(DcwmOrderQuery dcwmOrderQuery) {
+        return orderMapper.findRefundOrderByShopIdsAndDateNotGroup(dcwmOrderQuery);
+    }
+
 }

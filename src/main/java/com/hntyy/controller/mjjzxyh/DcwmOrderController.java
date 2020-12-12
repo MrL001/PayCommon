@@ -84,10 +84,88 @@ public class DcwmOrderController {
         dcwmOrderQuery.setShopIds(shopIds);
         List<DcwmOrderRusult> orders = orderService.findOrderByShopIdsAndDate(dcwmOrderQuery);
         List<DcwmOrderRusult> refundOrders = orderService.findRefundOrderByShopIdsAndDate(dcwmOrderQuery);
+        // 获取数据
+        result = assemData(orders, shops, refundOrders, dcwmOrderQuery);
 
-        /**
-         * 组装数据：当日订单为空也要显示，所以按店铺维度进行分页
-         */
+        // 总统计  计算有误
+//        dcwmOrderQuery.setDeliveryMode(null);
+//        DcwmOrderRusult ordersCount = orderService.findOrderByShopIdsAndDateNotGroup(dcwmOrderQuery);
+//        DcwmOrderRusult refundOrdersCount = orderService.findRefundOrderByShopIdsAndDateNotGroup(dcwmOrderQuery);
+//        pageHelper.setTotalPricesSums(ordersCount.getTotalPrices());
+//        if (refundOrdersCount != null){
+//            pageHelper.setRefundTotalPricesSums(refundOrdersCount.getRefundTotalPrices());
+//            pageHelper.setValidTotalPricesSums(ordersCount.getTotalPrices().subtract(refundOrdersCount.getRefundTotalPrices()));
+//            pageHelper.setRefundOrderNumsSums(refundOrdersCount.getRefundOrderNums());
+//            pageHelper.setValidOrderNumsSums(ordersCount.getOrderNums()-refundOrdersCount.getRefundOrderNums());
+//            pageHelper.setValidDeliveryFeeSums(ordersCount.getDeliveryFee().subtract(refundOrdersCount.getRefundDeliveryFee()));
+//            pageHelper.setValidCouponMoneySums(ordersCount.getCouponMoney().subtract(refundOrdersCount.getRefundCouponMoney()));
+//            pageHelper.setShopIncomeSums(pageHelper.getValidTotalPricesSums().subtract(pageHelper.getValidDeliveryFeeSums()));
+//        } else {
+//            pageHelper.setValidTotalPricesSums(ordersCount.getTotalPrices());
+//            pageHelper.setValidOrderNumsSums(ordersCount.getOrderNums());
+//            pageHelper.setValidDeliveryFeeSums(ordersCount.getDeliveryFee());
+//            pageHelper.setValidCouponMoneySums(ordersCount.getCouponMoney());
+//            pageHelper.setShopIncomeSums(pageHelper.getValidTotalPricesSums().subtract(pageHelper.getValidDeliveryFeeSums()));
+//        }
+//        dcwmOrderQuery.setDeliveryMode(1);
+//        DcwmOrderRusult ordersCount2 = orderService.findOrderByShopIdsAndDateNotGroup(dcwmOrderQuery);
+//        DcwmOrderRusult refundOrdersCount2 = orderService.findRefundOrderByShopIdsAndDateNotGroup(dcwmOrderQuery);
+//        if (refundOrdersCount2 != null){
+//            pageHelper.setDeliveryOrderNumsSums(ordersCount2.getOrderNums()-refundOrdersCount2.getRefundOrderNums());
+//        } else {
+//            pageHelper.setDeliveryOrderNumsSums(ordersCount2.getOrderNums());
+//        }
+
+        // 统计总记录数
+        int count = shopService.findShopCountByCanteenId(dcwmOrderQuery);
+        pageHelper.setTotal(count);
+        // 当前页实体对象
+        pageHelper.setRows(result);
+
+        return JSON.toJSONString(pageHelper);
+    }
+
+    @RequestMapping("/findCanteenBySchoolId")
+    @ResponseBody
+    public List<CanteenEntity> findCanteenBySchoolId(Long schoolId) {
+        // 查询食堂
+        List<CanteenEntity> canteens = canteenService.findCanteenBySchoolId(schoolId);
+        return canteens;
+    }
+
+    @RequestMapping("/exportDcwmOrder")
+    public void exportDcwmOrder(HttpServletResponse response){
+        try {
+            // 查询学校&食堂name
+            CanteenEntity canteenEntity = canteenService.findCanteenById(canteenId);
+            SchoolEntity schoolEntity = schoolService.findSchoolById(schoolId);
+            Date date = new Date();
+            String strDateFormat = "yyyyMMdd";
+            SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+
+            // 设置响应输出的头类型及下载文件的默认名称
+            ExportParams exportParams = new ExportParams(schoolEntity.getName()+canteenEntity.getName()+"营业额", "营业额统计表", ExcelType.XSSF);
+            exportParams.setStyle(ExcelStyleUtil.class);
+            String fileName = schoolEntity.getName()+"营业额统计表_"+ dateFormat.format(date) +".xls";
+
+            String fileNames = new String(fileName.getBytes("utf-8"), "ISO-8859-1");
+            response.addHeader("Content-Disposition", "attachment;filename=" + fileNames);
+            response.setContentType("application/vnd.ms-excel;charset=gb2312");
+
+            //导出
+            Workbook workbook = ExcelExportUtil.exportExcel(exportParams, DcwmOrderRusult.class, result);
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            log.info("请求 exportDcwmOrder 异常：{}", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 组装数据：当日订单为空也要显示，所以按店铺维度进行分页
+     */
+    private List<DcwmOrderRusult> assemData(List<DcwmOrderRusult> orders,List<ShopEntity> shops,List<DcwmOrderRusult> refundOrders,DcwmOrderQuery dcwmOrderQuery){
+        List<DcwmOrderRusult> result = new ArrayList<>();
         boolean empty = CollectionUtils.isEmpty(orders);
         shops.stream().forEach(shop -> {  // 循环店铺
             DcwmOrderRusult dcwmOrderRusult = new DcwmOrderRusult();
@@ -101,6 +179,7 @@ public class DcwmOrderController {
                         dcwmOrderRusult.setTotalPrices(order.getTotalPrices());  //总金额
                         dcwmOrderRusult.setOrderNums(order.getOrderNums());  //总订单量
                         dcwmOrderRusult.setDeliveryFee(order.getDeliveryFee());  //总配送费
+                        dcwmOrderRusult.setCouponMoney(order.getCouponMoney());  //总优惠券使用金额
                     }
                 });
             }
@@ -120,6 +199,7 @@ public class DcwmOrderController {
                         r.setRefundTotalPrices(refundOrder.getRefundTotalPrices());  // 退款金额
                         r.setRefundOrderNums(refundOrder.getRefundOrderNums());
                         r.setShopIncome(r.getValidTotalPrices().subtract(r.getValidDeliveryFee()));  // 店铺收入
+                        r.setValidCouponMoney(r.getCouponMoney().subtract(refundOrder.getRefundCouponMoney()));
                     }
                 });
                 // 无退款设置
@@ -128,6 +208,7 @@ public class DcwmOrderController {
                     r.setValidOrderNums(r.getOrderNums()); // 有效订单量
                     r.setValidDeliveryFee(r.getDeliveryFee());  // 有效配送费
                     r.setShopIncome(r.getValidTotalPrices().subtract(r.getValidDeliveryFee()));  // 店铺收入
+                    r.setValidCouponMoney(r.getCouponMoney());
                 }
             });
         }
@@ -177,50 +258,7 @@ public class DcwmOrderController {
                 });
             });
         }
-
-        // 统计总记录数
-        int count = shopService.findShopCountByCanteenId(dcwmOrderQuery);
-        pageHelper.setTotal(count);
-        // 当前页实体对象
-        pageHelper.setRows(result);
-
-        return JSON.toJSONString(pageHelper);
-    }
-
-    @RequestMapping("/findCanteenBySchoolId")
-    @ResponseBody
-    public List<CanteenEntity> findCanteenBySchoolId(Long schoolId) {
-        // 查询食堂
-        List<CanteenEntity> canteens = canteenService.findCanteenBySchoolId(schoolId);
-        return canteens;
-    }
-
-    @RequestMapping("/exportDcwmOrder")
-    public void exportDcwmOrder(HttpServletResponse response){
-        try {
-            // 查询学校&食堂name
-            CanteenEntity canteenEntity = canteenService.findCanteenById(canteenId);
-            SchoolEntity schoolEntity = schoolService.findSchoolById(schoolId);
-            Date date = new Date();
-            String strDateFormat = "yyyyMMdd";
-            SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-
-            // 设置响应输出的头类型及下载文件的默认名称
-            ExportParams exportParams = new ExportParams(schoolEntity.getName()+canteenEntity.getName()+"营业额", "营业额统计表", ExcelType.XSSF);
-            exportParams.setStyle(ExcelStyleUtil.class);
-            String fileName = schoolEntity.getName()+"营业额统计表_"+ dateFormat.format(date) +".xls";
-
-            String fileNames = new String(fileName.getBytes("utf-8"), "ISO-8859-1");
-            response.addHeader("Content-Disposition", "attachment;filename=" + fileNames);
-            response.setContentType("application/vnd.ms-excel;charset=gb2312");
-
-            //导出
-            Workbook workbook = ExcelExportUtil.exportExcel(exportParams, DcwmOrderRusult.class, result);
-            workbook.write(response.getOutputStream());
-        } catch (IOException e) {
-            log.info("请求 exportDcwmOrder 异常：{}", e.getMessage());
-            e.printStackTrace();
-        }
+        return result;
     }
 
 }

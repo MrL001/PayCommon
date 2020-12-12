@@ -11,4 +11,13 @@
         SELECT count(*) FROM shop_tb WHERE canteen_id=#{canteenId}
     </select>
 
+    <!-- 查询所有店铺 -->
+    <select id="findShopAll" resultType="com.hntyy.entity.mjjzxyh.ShopEntity">
+        SELECT * FROM shop_tb
+    </select>
+
+    <select id="findShopByShopId" resultType="com.hntyy.entity.mjjzxyh.ShopEntity">
+        SELECT * FROM shop_tb where shop_id=#{shopId}
+    </select>
+
 </mapper>

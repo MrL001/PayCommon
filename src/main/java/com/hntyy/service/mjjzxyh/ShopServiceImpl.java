@@ -24,4 +24,14 @@ public class ShopServiceImpl implements ShopService {
         return shopMapper.findShopCountByCanteenId(dcwmOrderQuery);
     }
 
+    @Override
+    public List<ShopEntity> findShopAll() {
+        return shopMapper.findShopAll();
+    }
+
+    @Override
+    public ShopEntity findShopByShopId(Long shopId) {
+        return shopMapper.findShopByShopId(shopId);
+    }
+
 }

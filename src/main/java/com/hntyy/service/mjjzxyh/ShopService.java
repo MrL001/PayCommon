@@ -20,4 +20,20 @@ public interface ShopService {
      */
     int findShopCountByCanteenId(DcwmOrderQuery dcwmOrderQuery);
 
+    /**
+     * 查询所有店铺
+     * @param
+     * @return
+     */
+    List<ShopEntity> findShopAll();
+
+    /**
+     * 查询店铺
+     * @param
+     * @return
+     */
+    ShopEntity findShopByShopId(Long shopId);
+
+
+
 }

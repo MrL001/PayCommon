@@ -3,6 +3,8 @@ package com.hntyy.mapper.mjjzxyh;
 import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
 import com.hntyy.entity.mjjzxyh.ShopEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -24,5 +26,19 @@ public interface ShopMapper {
      * @return
      */
     int findShopCountByCanteenId(DcwmOrderQuery dcwmOrderQuery);
+
+    /**
+     * 查询所有店铺
+     * @param
+     * @return
+     */
+    List<ShopEntity> findShopAll();
+
+    /**
+     * 查询所有店铺
+     * @param
+     * @return
+     */
+    ShopEntity findShopByShopId(@Param("shopId")Long shopId);
 
 }

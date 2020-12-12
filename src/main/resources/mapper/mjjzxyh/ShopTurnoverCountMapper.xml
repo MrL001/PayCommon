@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hntyy.mapper.mjjzxyh.ShopTurnoverCountMapper">
+
+    <!-- 批量插入初始化 -->
+    <insert id="insertBatch">
+        insert into shop_turnover_count_tb
+            (shop_id,shop_name,create_date,count_date,total_prices,refund_total_prices,valid_total_prices,
+            valid_delivery_fee,shop_income,refund_ordernums,valid_ordernums,delivery_ordernums,school_id,canteen_id,
+            valid_coupon_money)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.shopId},#{item.shopName},NOW(),date_format(#{item.countDate}, '%Y-%m-%d'),#{item.totalPrices},#{item.refundTotalPrices},#{item.validTotalPrices},
+            #{item.validDeliveryFee},#{item.shopIncome},#{item.refundOrderNums},#{item.validOrderNums},#{item.deliveryOrderNums},#{item.schoolId},#{item.canteenId},
+            #{item.validCouponMoney})
+        </foreach>
+    </insert>
+
+    <!-- 通过食堂id查询营业额 -->
+    <select id="findTurnoverByCanteenId" resultType="com.hntyy.entity.mjjzxyh.DcwmOrderRusult">
+        SELECT
+            shop_id shopId,
+            shop_name shopName,
+            SUM(total_prices) totalPrices,
+            SUM(refund_total_prices) refundTotalPrices,
+            SUM(valid_total_prices) validTotalPrices,
+            SUM(valid_delivery_fee) validDeliveryFee,
+            SUM(shop_income) shopIncome,
+            SUM(refund_ordernums) refundOrderNums,
+            SUM(valid_ordernums) validOrderNums,
+            SUM(delivery_ordernums) deliveryOrderNums,
+            SUM(valid_coupon_money) validCouponMoney
+        FROM shop_turnover_count_tb where canteen_id=#{canteenId}
+        <if test="queryDate != null and queryDate != ''">
+            AND DATE_FORMAT(count_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(count_date, '%Y-%m-%d') &lt;= #{queryEndDate}
+        </if>
+        group by shop_id
+        LIMIT #{offset},#{limit}
+    </select>
+    <select id="findTurnoverCountByCanteenId" resultType="int">
+        select count(*) from (
+            SELECT shop_id FROM shop_turnover_count_tb where canteen_id=#{canteenId}
+                <if test="queryDate != null and queryDate != ''">
+                    AND DATE_FORMAT(count_date, '%Y-%m-%d') &gt;= #{queryDate}
+                </if>
+                <if test="queryEndDate != null and queryEndDate != ''">
+                    AND DATE_FORMAT(count_date, '%Y-%m-%d') &lt;= #{queryEndDate}
+                </if>
+            group by shop_id
+        )a
+    </select>
+
+    <!-- 通过食堂id查询营业额 总统计 -->
+    <select id="findTurnoverByCanteenIdCount" resultType="com.hntyy.entity.mjjzxyh.DcwmOrderRusult">
+        SELECT
+            shop_id shopId,
+            shop_name shopName,
+            SUM(total_prices) totalPrices,
+            SUM(refund_total_prices) refundTotalPrices,
+            SUM(valid_total_prices) validTotalPrices,
+            SUM(valid_delivery_fee) validDeliveryFee,
+            SUM(shop_income) shopIncome,
+            SUM(refund_ordernums) refundOrderNums,
+            SUM(valid_ordernums) validOrderNums,
+            SUM(delivery_ordernums) deliveryOrderNums,
+            SUM(valid_coupon_money) validCouponMoney
+            FROM shop_turnover_count_tb where canteen_id=#{canteenId}
+        <if test="queryDate != null and queryDate != ''">
+            AND DATE_FORMAT(count_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(count_date, '%Y-%m-%d') &lt;= #{queryEndDate}
+        </if>
+    </select>
+
+</mapper>

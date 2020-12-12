@@ -4,17 +4,19 @@ import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.hntyy.entity.Page;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 点餐外卖订单列表 展示Rusult
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DcwmOrderRusult implements Serializable {
+public class DcwmOrderRusult extends Page implements Serializable {
 
     /**
      * 店铺id
@@ -33,19 +35,19 @@ public class DcwmOrderRusult implements Serializable {
     /**
      * 总价统计 默认值：0 查
      */
-    @Excel(name = "总金额", width = 25,orderNum = "3")
+    @Excel(name = "总金额", width = 25,orderNum = "2")
     private BigDecimal totalPrices = BigDecimal.ZERO;
 
     /**
      * 退款总金额
      */
-    @Excel(name = "退款金额", width = 25,orderNum = "4")
+    @Excel(name = "退款金额", width = 25,orderNum = "3")
     private BigDecimal refundTotalPrices = BigDecimal.ZERO;
 
     /**
      * 有效总金额 默认值：0  总金额-退款金额
      */
-    @Excel(name = "有效总金额", width = 25,orderNum = "2")
+    @Excel(name = "有效总金额", width = 25,orderNum = "4")
     private BigDecimal validTotalPrices = BigDecimal.ZERO;
 
     /**
@@ -92,5 +94,32 @@ public class DcwmOrderRusult implements Serializable {
      */
     @Excel(name = "店铺收入", width = 25,orderNum = "9")
     private BigDecimal shopIncome = BigDecimal.ZERO;
+
+    /**
+     * 统计时间
+     */
+    private String countDate;
+
+    /**
+     * 学校id
+     */
+    private Long schoolId;
+
+    /**
+     * 食堂id
+     */
+    private Long canteenId;
+
+    // 优惠券使用金额
+    private BigDecimal couponMoney = BigDecimal.ZERO;
+
+    /**
+     * 有效优惠券使用金额   优惠券使用金额-退款优惠券使用金额
+     */
+    @Excel(name = "有效优惠券使用金额", width = 25,orderNum = "10")
+    private BigDecimal validCouponMoney = BigDecimal.ZERO;
+
+    // 退款优惠券使用金额
+    private BigDecimal refundCouponMoney = BigDecimal.ZERO;
 
 }
