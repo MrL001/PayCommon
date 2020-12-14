@@ -107,6 +107,13 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!-- 易宝sdk -->
+        <dependency>
+            <groupId>com.yeepay.yop-java-sdk</groupId>
+            <artifactId>yop-java-sdk</artifactId>
+            <version>3.2.25</version>
+        </dependency>
+
     </dependencies>
 
     <build>

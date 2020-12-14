@@ -7,12 +7,18 @@ import com.alibaba.fastjson.JSON;
 import com.hntyy.common.UrlUtil;
 import com.hntyy.common.ExcelStyleUtil;
 import com.hntyy.entity.PageHelper;
-import com.hntyy.entity.mjjzxyh.*;
-import com.hntyy.service.mjjzxyh.*;
+import com.hntyy.entity.mjjzxyh.CanteenEntity;
+import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
+import com.hntyy.entity.mjjzxyh.DcwmOrderRusult;
+import com.hntyy.entity.mjjzxyh.SchoolEntity;
+import com.hntyy.service.mjjzxyh.CanteenService;
+import com.hntyy.service.mjjzxyh.SchoolService;
+import com.hntyy.service.mjjzxyh.ShopTurnoverCountService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,12 +32,12 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 营业额统计
+ * 学校营业额统计（根据学校展示）
  */
 @Slf4j
 @RestController
-@RequestMapping("/turnoverCount")
-public class TurnoverCountController {
+@RequestMapping("/schoolTurnoverCount")
+public class SchoolTurnoverCountController {
 
     @Autowired
     private SchoolService schoolService;
@@ -48,17 +54,25 @@ public class TurnoverCountController {
     private Long canteenId;
 
     @RequestMapping("/index")
-    public ModelAndView index(ModelAndView mv,DcwmOrderQuery dcwmOrderQuery) {
-        mv.setViewName("/mjjzxyh/dcwmOrderList");
-        // 查询所有学校（用于下拉框）
-        List<SchoolEntity> schools = schoolService.findAll();
-        // 学校id加密
-        for (SchoolEntity s:schools) {
-            s.setSchoolIdStr(UrlUtil.enCryptAndEncode(s.getSchoolId().toString()));
+    public ModelAndView index(ModelAndView mv,String schoolId) {
+        // 必须传学校id
+        if (StringUtils.isEmpty(schoolId)){
+            return null;
         }
+        // 查询学校（用于下拉框）解密
+        String schoolid = null;
+        try {
+            schoolid = UrlUtil.deCryptAndDecode(schoolId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SchoolEntity schools = schoolService.findSchoolById(Long.valueOf(schoolid));
+        if (schools == null){
+            return null;
+        }
+        mv.setViewName("/mjjzxyh/schoolTurnoverCountOrder");
         mv.addObject("schools",schools);
-        // 查询食堂（取schools第一个数据作为初始值）
-        List<CanteenEntity> canteens = canteenService.findCanteenBySchoolId(schools.get(0).getSchoolId());
+        List<CanteenEntity> canteens = canteenService.findCanteenBySchoolId(schools.getSchoolId());
         mv.addObject("canteens",canteens);
         return mv;
     }

@@ -21,6 +21,12 @@ public class SchoolEntity extends BaseEntity {
     private Long schoolId;
 
     /**
+     * 学校id
+     */
+    @JsonSerialize(using= ToStringSerializer.class)
+    private String schoolIdStr;
+
+    /**
      * 名称
      */
     private String name;

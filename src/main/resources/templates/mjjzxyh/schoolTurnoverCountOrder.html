@@ -9,7 +9,7 @@
     <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <![endif]-->
-    <title>营业额统计</title>
+    <title>学校营业额统计</title>
 
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/webjars/bootstrap-table/1.16.0/bootstrap-table.min.css"/>
@@ -226,69 +226,55 @@
 
 </head>
 <body>
-<div class="panel panel-primary" style="margin-top: 20px">
-    <div class="panel-heading">
-        <h3 class="panel-title">营业额统计</h3>
-    </div>
-    <div class="panel-body">
-        <div style="display:inline-block;">
-            <div style="float:left;padding:6px;">
-                <span>学校：</span>
-            </div>
-            <div style="float:left;">
-                <select class="form-control" id="querySchool" onchange="selectSchool(value)">
-                    <option th:each="school:${schools}" th:text="${school.name}" th:value="${school.schoolId}"></option>
-                </select>
-            </div>
-            <div style="float:left;padding:6px;margin-left:20px">
-                <span>食堂：</span>
-            </div>
-            <div style="float:left;">
-                <select class="form-control" id="queryCanteen">
-                    <option th:each="canteen:${canteens}" th:text="${canteen.name}" th:value="${canteen.canteenId}"></option>
-                </select>
-            </div>
-            <div style="float:left;padding:6px;margin-left:20px">
-                <span>日期：</span>
-            </div>
-            <div style="float:left;">
-                <input type="text" name="date" class="form-control" id="queryDate">
-            </div>
-            <div style="float:left;margin-left: 5px">
-                <input type="text" name="date" class="form-control" id="queryEndDate">
-            </div>
-            <div style="float:left;margin-left:20px;">
-                <button id="queryBtn" class="btn btn-primary">查询</button>
-            </div>
-            <div style="float:left;margin-left:20px;">
-                <button id="exportBtn" class="btn btn-primary" onclick="exportExcel()">导出</button>
+<div style="margin-top: 20px;margin-left: 20px;margin-right: 20px">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span th:text="${schools.name}"></span> 营业额统计</h3>
+        </div>
+        <div class="panel-body">
+            <div style="display:inline-block;">
+                <div style="float:left;padding:6px;margin-left:20px">
+                    <span>食堂：</span>
+                </div>
+                <div style="float:left;">
+                    <select class="form-control" id="queryCanteen">
+                        <option th:each="canteen:${canteens}" th:text="${canteen.name}" th:value="${canteen.canteenId}"></option>
+                    </select>
+                </div>
+                <div style="float:left;padding:6px;margin-left:20px">
+                    <span>日期：</span>
+                </div>
+                <div style="float:left;">
+                    <input type="text" name="date" class="form-control" id="queryDate">
+                </div>
+                <div style="float:left;margin-left: 5px">
+                    <input type="text" name="date" class="form-control" id="queryEndDate">
+                </div>
+                <div style="float:left;margin-left:20px;">
+                    <button id="queryBtn" class="btn btn-primary">查询</button>
+                </div>
+                <div style="float:left;margin-left:20px;">
+                    <button id="exportBtn" class="btn btn-primary" onclick="exportExcel()">导出</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="ibox-content">
-    <table id="myTable"></table>
-</div>
+    <div class="ibox-content">
+        <table id="myTable"></table>
+    </div>
 
-<div style="margin-top: 10px">
-    外部地址：
-    <span th:each="school : ${schools}">
-        <a th:href="@{'http://localhost:8080/schoolTurnoverCount/index?schoolId='+${school.schoolIdStr}}" target="_blank"><span th:text="${school.name}"></span>营业额统计</a>
-        &nbsp;&nbsp;
-    </span>
-</div>
-
-<div style="margin-top: 10px">
-    总金额 ：<span id="totalPricesSums"></span>
-    ，退款金额 ：<span id="refundTotalPricesSums"></span>
-    ，有效总金额 ：<span id="validTotalPricesSums"></span>
-    ，退款订单量 ：<span id="refundOrderNumsSums"></span>
-    ，有效订单量 ：<span id="validOrderNumsSums"></span>
-    ，有效配送订单量 ：<span id="deliveryOrderNumsSums"></span>
-    ，有效配送金额 ：<span id="validDeliveryFeeSums"></span>
-    ，店铺收入 ：<span id="shopIncomeSums"></span>
-    ，有效优惠券使用金额 ：<span id="validCouponMoneySums"></span>
+    <div style="margin-top: 10px">
+        总金额 ：<span id="totalPricesSums"></span>
+        ，退款金额 ：<span id="refundTotalPricesSums"></span>
+        ，有效总金额 ：<span id="validTotalPricesSums"></span>
+        ，退款订单量 ：<span id="refundOrderNumsSums"></span>
+        ，有效订单量 ：<span id="validOrderNumsSums"></span>
+        ，有效配送订单量 ：<span id="deliveryOrderNumsSums"></span>
+        ，有效配送金额 ：<span id="validDeliveryFeeSums"></span>
+        ，店铺收入 ：<span id="shopIncomeSums"></span>
+        ，有效优惠券使用金额 ：<span id="validCouponMoneySums"></span>
+    </div>
 </div>
 
 </body>
