@@ -76,4 +76,28 @@
         </if>
     </select>
 
+    <!-- 通过食堂id查询营业额 用于导出 -->
+    <select id="findTurnoverExportByCanteenId" resultType="com.hntyy.entity.mjjzxyh.DcwmOrderRusult">
+        SELECT
+            shop_id shopId,
+            shop_name shopName,
+            SUM(total_prices) totalPrices,
+            SUM(refund_total_prices) refundTotalPrices,
+            SUM(valid_total_prices) validTotalPrices,
+            SUM(valid_delivery_fee) validDeliveryFee,
+            SUM(shop_income) shopIncome,
+            SUM(refund_ordernums) refundOrderNums,
+            SUM(valid_ordernums) validOrderNums,
+            SUM(delivery_ordernums) deliveryOrderNums,
+            SUM(valid_coupon_money) validCouponMoney
+            FROM shop_turnover_count_tb where canteen_id=#{canteenId}
+        <if test="queryDate != null and queryDate != ''">
+            AND DATE_FORMAT(count_date, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(count_date, '%Y-%m-%d') &lt;= #{queryEndDate}
+        </if>
+        group by shop_id
+    </select>
+
 </mapper>

@@ -33,4 +33,9 @@ public class ShopTurnoverCountServiceImpl implements ShopTurnoverCountService {
     public DcwmOrderRusult findTurnoverByCanteenIdCount(DcwmOrderQuery dcwmOrderQuery) {
         return shopTurnoverCountMapper.findTurnoverByCanteenIdCount(dcwmOrderQuery);
     }
+
+    @Override
+    public List<DcwmOrderRusult> findTurnoverExportByCanteenId(DcwmOrderQuery dcwmOrderQuery) {
+        return shopTurnoverCountMapper.findTurnoverExportByCanteenId(dcwmOrderQuery);
+    }
 }

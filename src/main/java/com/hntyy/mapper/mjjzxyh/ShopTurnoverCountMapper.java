@@ -34,6 +34,10 @@ public interface ShopTurnoverCountMapper {
      */
     DcwmOrderRusult findTurnoverByCanteenIdCount(DcwmOrderQuery dcwmOrderQuery);
 
-
+    /**
+     * 通过食堂id查询营业额
+     * @return
+     */
+    List<DcwmOrderRusult> findTurnoverExportByCanteenId(DcwmOrderQuery dcwmOrderQuery);
 
 }

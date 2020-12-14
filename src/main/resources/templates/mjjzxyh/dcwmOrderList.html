@@ -215,12 +215,12 @@
 
         // 导出Excel
         function exportExcel () {
-            // var querySchool = $("#querySchool").val();
-            // var queryCanteen = $("#queryCanteen").val();
-            // var queryDate = $("#queryDate").val();
-            // window.location.href = "/dcwmOrder/exportDcwmOrder?querySchool="+querySchool+"&queryCanteen="
-            //     +queryCanteen+"&queryDate="+queryDate+"&random="+Math.round(Math.random()*100);
-            window.location.href = "/turnoverCount/exportDcwmOrder?random="+Math.round(Math.random()*100);
+            var schoolId = $("#querySchool").val();
+            var canteenId = $("#queryCanteen").val();
+            var queryDate = $("#queryDate").val();
+            var queryEndDate = $("#queryEndDate").val();
+            window.location.href = "/turnoverCount/exportDcwmOrder?schoolId="+schoolId+"&canteenId="+canteenId+
+                "&queryDate="+queryDate+"&queryEndDate="+queryEndDate+"&random="+Math.round(Math.random()*100);
         }
     </script>
 
