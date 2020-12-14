@@ -26,8 +26,9 @@ public class WebConfigurer implements WebMvcConfigurer {
 //        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/index", "/login");
         registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/","/index","/login")
                 //放行静态资源
-                .excludePathPatterns("/webjars/**")
+                .excludePathPatterns("/webjars/**","/css/**","/img/**","/js/**")
                 // 放行对外的接口
-                .excludePathPatterns("/sensitiveWords/sensitiveWordsMatch");
+                .excludePathPatterns("/sensitiveWords/sensitiveWordsMatch")
+                .excludePathPatterns("/schoolTurnoverCount/**");
     }
 }

@@ -37,7 +37,7 @@
             //先销毁表格
             $('#myTable').bootstrapTable('destroy');
             $('#myTable').bootstrapTable({
-                url: "/turnoverCount/findAll",//请求后台的URL（*）
+                url: "/schoolTurnoverCount/findAll",//请求后台的URL（*）
                 method: 'get',
                 dataType: "json",
                 dataField: 'rows',
@@ -68,7 +68,6 @@
                     return {//这里的params是table提供的
                         offset: params.offset,//从数据库第几条记录开始
                         limit: params.limit,//找多少条
-                        schoolId: $("#querySchool").val(), //这个就是搜索框中的内容，可以自动传到后台，搜索实现在xml中体现
                         canteenId: $("#queryCanteen").val(),
                         queryDate: $("#queryDate").val(),
                         queryEndDate: $("#queryEndDate").val(),
@@ -138,8 +137,10 @@
 
                 }],
                 onLoadSuccess: function () {
+                    debugger
                 },
                 onLoadError: function () {
+                    debugger
                     alert("数据加载失败！");
                 }
             });
@@ -178,49 +179,13 @@
             // $("#queryEndDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
         }
 
-        // 切换学校调用生成食堂
-        function selectSchool(value) {
-            $.ajax({
-                type: "GET",
-                url: '/turnoverCount/findCanteenBySchoolId',
-                data: {
-                    "schoolId": value
-                },
-                cache: false,
-                success: function (data) {
-                    console.info(data)
-                    // 清空select
-                    $("#queryCanteen").empty();
-                    //由JSON字符串转换为JSON对象
-                    // var canteens = JSON.parse(data);
-                    var canteens = data;
-                    console.info(canteens)
-                    // 重新组装食堂select
-                    $.each(canteens, function(i, item){
-                        $("#queryCanteen").append("<option value='"+item.canteenId+"'>"+item.name+"</option>");
-                    });
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    /*弹出jqXHR对象的信息*/
-                    alert('error ajax请求被拒绝:  ' +
-                        '\n jqXHR.responseText: ' + jqXHR.responseText +
-                        '\n jqXHR.status: ' + jqXHR.status +
-                        '\n jqXHR.readyState: ' + jqXHR.readyState +
-                        '\n jqXHR.statusText: ' + jqXHR.statusText +
-                        '\n textStatus: ' + textStatus +
-                        "\n errorThrown:" +errorThrown);
-                }
-            })
-        }
-
         // 导出Excel
         function exportExcel () {
-            // var querySchool = $("#querySchool").val();
-            // var queryCanteen = $("#queryCanteen").val();
-            // var queryDate = $("#queryDate").val();
-            // window.location.href = "/dcwmOrder/exportDcwmOrder?querySchool="+querySchool+"&queryCanteen="
-            //     +queryCanteen+"&queryDate="+queryDate+"&random="+Math.round(Math.random()*100);
-            window.location.href = "/turnoverCount/exportDcwmOrder?random="+Math.round(Math.random()*100);
+            var canteenId = $("#queryCanteen").val();
+            var queryDate = $("#queryDate").val();
+            var queryEndDate = $("#queryEndDate").val();
+            window.location.href = "/schoolTurnoverCount/exportDcwmOrder?canteenId="+canteenId+
+                "&queryDate="+queryDate+"&queryEndDate="+queryEndDate+"&random="+Math.round(Math.random()*100);
         }
     </script>
 

@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 学校营业额统计（根据学校展示）
+ * 学校营业额统计（根据学校展示）与TurnoverCountController同步调整
  */
 @Slf4j
 @RestController
@@ -48,13 +48,13 @@ public class SchoolTurnoverCountController {
     @Autowired
     private ShopTurnoverCountService shopTurnoverCountService;
 
-    // 全局变量，用于导出获取，减少查询次数
-    private List<DcwmOrderRusult> result = new ArrayList<>();
-    private Long schoolId;
-    private Long canteenId;
+    // 定义全局变量用于导出
+    private Long schoolIdd;
+//    private Long canteenId;
 
     @RequestMapping("/index")
     public ModelAndView index(ModelAndView mv,String schoolId) {
+        schoolIdd = null;
         // 必须传学校id
         if (StringUtils.isEmpty(schoolId)){
             return null;
@@ -70,9 +70,11 @@ public class SchoolTurnoverCountController {
         if (schools == null){
             return null;
         }
+        schoolIdd = Long.valueOf(schoolid);
         mv.setViewName("/mjjzxyh/schoolTurnoverCountOrder");
         mv.addObject("schools",schools);
         List<CanteenEntity> canteens = canteenService.findCanteenBySchoolId(schools.getSchoolId());
+//        canteenId = canteens.get(0).getCanteenId();
         mv.addObject("canteens",canteens);
         return mv;
     }
@@ -80,14 +82,10 @@ public class SchoolTurnoverCountController {
     @RequestMapping("/findAll")
     @ResponseBody
     public String findAll(DcwmOrderQuery dcwmOrderQuery) {
-        // 清除数据
-        result = new ArrayList<>();
-        schoolId = dcwmOrderQuery.getSchoolId();
-        canteenId = dcwmOrderQuery.getCanteenId();
         PageHelper<DcwmOrderRusult> pageHelper = new PageHelper();
 
         // 统计信息
-        result = shopTurnoverCountService.findTurnoverByCanteenId(dcwmOrderQuery);
+        List<DcwmOrderRusult> result = shopTurnoverCountService.findTurnoverByCanteenId(dcwmOrderQuery);
         if (CollectionUtils.isEmpty(result)){
             return JSON.toJSONString(pageHelper);
         }
@@ -113,26 +111,19 @@ public class SchoolTurnoverCountController {
         return JSON.toJSONString(pageHelper);
     }
 
-    @RequestMapping("/findCanteenBySchoolId")
-    @ResponseBody
-    public List<CanteenEntity> findCanteenBySchoolId(Long schoolId) {
-        // 查询食堂
-        List<CanteenEntity> canteens = canteenService.findCanteenBySchoolId(schoolId);
-        return canteens;
-    }
-
     @RequestMapping("/exportDcwmOrder")
-    public void exportDcwmOrder(HttpServletResponse response){
+    public void exportDcwmOrder(HttpServletResponse response,DcwmOrderQuery dcwmOrderQuery){
         try {
             // 查询学校&食堂name
-            CanteenEntity canteenEntity = canteenService.findCanteenById(canteenId);
-            SchoolEntity schoolEntity = schoolService.findSchoolById(schoolId);
+            CanteenEntity canteenEntity = canteenService.findCanteenById(dcwmOrderQuery.getCanteenId());
+            SchoolEntity schoolEntity = schoolService.findSchoolById(schoolIdd);
             Date date = new Date();
             String strDateFormat = "yyyyMMdd";
             SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
 
             // 设置响应输出的头类型及下载文件的默认名称
-            ExportParams exportParams = new ExportParams(schoolEntity.getName()+canteenEntity.getName()+"营业额", "营业额统计表", ExcelType.XSSF);
+            ExportParams exportParams = new ExportParams(schoolEntity.getName()+canteenEntity.getName()+"营业额 "+
+                    dcwmOrderQuery.getQueryDate()+"~"+dcwmOrderQuery.getQueryEndDate(), "营业额统计表", ExcelType.XSSF);
             exportParams.setStyle(ExcelStyleUtil.class);
             String fileName = schoolEntity.getName()+"营业额统计表_"+ dateFormat.format(date) +".xls";
 
@@ -141,6 +132,7 @@ public class SchoolTurnoverCountController {
             response.setContentType("application/vnd.ms-excel;charset=gb2312");
 
             //导出
+            List<DcwmOrderRusult> result = shopTurnoverCountService.findTurnoverExportByCanteenId(dcwmOrderQuery);
             Workbook workbook = ExcelExportUtil.exportExcel(exportParams, DcwmOrderRusult.class, result);
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
