@@ -27,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,7 +73,6 @@ public class SchoolTurnoverCountController {
         mv.setViewName("/mjjzxyh/schoolTurnoverCountOrder");
         mv.addObject("schools",schools);
         List<CanteenEntity> canteens = canteenService.findCanteenBySchoolId(schools.getSchoolId());
-//        canteenId = canteens.get(0).getCanteenId();
         mv.addObject("canteens",canteens);
         return mv;
     }
