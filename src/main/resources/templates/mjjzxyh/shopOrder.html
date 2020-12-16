@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <!--[if IE]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <![endif]-->
+    <title>商品订单</title>
+
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/webjars/bootstrap-table/1.16.0/bootstrap-table.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datetimepicker.css">
+
+    <script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Bootstrap table: Bootstrap 的 jQuery 扩展表格插件，实现查询、分页、排序、复选框、设置显示列、Card view视图、主从表显示、合并列、国际化处理等处理功能 -->
+    <script src="/webjars/bootstrap-table/1.16.0/bootstrap-table.min.js"></script>
+    <script src="/webjars/bootstrap-table/1.16.0/locale/bootstrap-table-zh-CN.min.js"></script>
+    <!-- Bootstrap-datetimepicker 日期时间选择器 -->
+    <script type="text/javascript" src="../js/datetimepicker/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="../js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script>
+        $(function () {
+            //调用函数，初始化表格
+            initTable();
+            //当点击查询按钮的时候执行,bootstrap-table前端分页是不能使用搜索功能，所以可以提取出来自定义搜索。
+            $("#queryBtn").bind("click", initTable);
+            // 初始化时间控件datetimepicker
+            initDatetimepicker();
+        });
+        function initTable() {
+            //先销毁表格
+            $('#myTable').bootstrapTable('destroy');
+            $('#myTable').bootstrapTable({
+                url: "/sensitiveWords/findAll",//请求后台的URL（*）
+                method: 'get',
+                dataType: "json",
+                dataField: 'rows',
+                striped: true,//设置为 true 会有隔行变色效果
+                undefinedText: "空",//当数据为 undefined 时显示的字符
+                pagination: true, //设置为 true 会在表格底部显示分页条。
+                showToggle: "true",//是否显示 切换试图（table/card）按钮
+                showColumns: "true",//是否显示 内容列下拉框
+                pageNumber: 1,//初始化加载第一页，默认第一页
+                pageSize: 10,//每页的记录行数（*）
+                pageList: [10, 20, 50, 100, 500, 1000],//可供选择的每页的行数（*），当记录条数大于最小可选择条数时才会出现
+                paginationPreText: '上一页',
+                paginationNextText: '下一页',
+                search: false, //是否显示表格搜索,bootstrap-table服务器分页不能使用搜索功能，可以自定义搜索框，上面jsp中已经给出，操作方法也已经给出
+                striped : true,//隔行变色
+                showColumns: false,//是否显示 内容列下拉框
+                showToggle: false, //是否显示详细视图和列表视图的切换按钮
+                clickToSelect: true,  //是否启用点击选中行
+                data_local: "zh-US",//表格汉化
+                sidePagination: "server", //服务端处理分页
+                queryParamsType : "limit",//设置为 ‘limit’ 则会发送符合 RESTFul 格式的参数.
+                queryParams: function (params) {
+                    // 自定义参数，这里的参数是传给后台的，我这是是分页用的
+                    // 请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果
+                    // 如果queryParamsType = 'limit' ,返回参数必须包含limit, offset, search, sort, order
+                    // queryParamsType = 'undefined', 返回参数必须包含: pageSize, pageNumber, searchText, sortName, sortOrder.
+                    // 返回false将会终止请求。
+                    return {//这里的params是table提供的
+                        offset: params.offset,//从数据库第几条记录开始
+                        limit: params.limit,//找多少条
+                        word: $("#word").val()
+                    };
+                },
+                responseHandler: function (res) {　//如果后台返回的json格式不是{rows:[{...},{...}],total:100},可以在这块处理成这样的格式　　　　　　return res;
+                    return res;
+                },
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'id',
+                    title: 'id',
+
+                }, {
+                    field: 'word',
+                    title: '敏感词',
+
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function operateFormatter(value, row, index) {
+                        var d = '<button href="#" class="btn btn-warning"  onclick="editOnclick(\'' + row.id + '\',\'' + row.word + '\')">编辑</button> ' +
+                            '<button href="#" class="btn btn-danger" style="margin-left: 20px"  onclick="deleteOne(\'' + row.id + '\')">删除</button>';
+                        return d;
+                    }
+                }],
+                onLoadSuccess: function () {
+                },
+                onLoadError: function () {
+                    alert("数据加载失败！");
+                }
+            });
+        }
+
+        function initDatetimepicker() {
+            $('#queryDate').datetimepicker({
+                bootcssVer: 3,
+                forceParse: 0,//设置为0，时间不会跳转1899，会显示当前时间。
+                language: 'zh-CN',//显示中文
+                format: 'yyyy-mm-dd',//显示格式
+                minView: "month",//设置只显示到月份
+                initialDate: new Date(),//初始化当前日期
+                autoclose: true,//选中自动关闭
+                clearBtn: true,//自定义属性,true 显示 清空按钮 false 隐藏 默认:true
+                todayBtn: true//显示今日按钮
+            }).on("changeDate",function(){
+                $("#queryEndDate").datetimepicker("setStartDate",""+$("#queryDate").val());
+                console.log("#queryDate的changeDate事件给#queryEndDate设置开始日期setStartDate==========执行完毕");
+            });
+            // $("#queryDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
+            $('#queryEndDate').datetimepicker({
+                bootcssVer: 3,
+                forceParse: 0,//设置为0，时间不会跳转1899，会显示当前时间。
+                language: 'zh-CN',//显示中文
+                format: 'yyyy-mm-dd',//显示格式
+                minView: "month",//设置只显示到月份
+                initialDate: new Date(),//初始化当前日期
+                autoclose: true,//选中自动关闭
+                clearBtn: true,//自定义属性,true 显示 清空按钮 false 隐藏 默认:true
+                todayBtn: true//显示今日按钮
+            }).on("changeDate",function(){
+                $("#queryDate").datetimepicker("setEndDate",""+$("#queryEndDate").val());
+                console.log("#queryEndDate的changeDate事件给queryDate设置结束日期setEndDate============执行完毕");
+            });
+            // $("#queryEndDate").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
+        }
+
+        // 导出Excel
+        function exportExcel () {
+            var schoolId = $("#schoolId").val();
+            var deliveryMode = $("#deliveryMode").val();
+            var queryDate = $("#queryDate").val();
+            var queryEndDate = $("#queryEndDate").val();
+            window.location.href = "/shopOrder/exportDcwmOrder?schoolId="+schoolId+"&deliveryMode="+deliveryMode+
+                "&queryDate="+queryDate+"&queryEndDate="+queryEndDate+"&random="+Math.round(Math.random()*100);
+        }
+
+    </script>
+
+</head>
+<body>
+<div class="panel panel-primary" style="margin-top: 20px">
+    <div class="panel-heading">
+        <h3 class="panel-title">商品订单</h3>
+    </div>
+    <div class="panel-body">
+        <div style="display:inline-block;">
+            <div style="float:left;padding:6px;">
+                <span>学校：</span>
+            </div>
+            <div style="float:left;">
+                <select class="form-control" id="schoolId">
+                    <option value ="0">请选择学校</option>
+                    <option th:each="school:${schools}" th:text="${school.name}" th:value="${school.schoolId}"></option>
+                </select>
+            </div>
+            <div style="float:left;padding:6px;margin-left:20px">
+                <span>配送方式：</span>
+            </div>
+            <div style="float:left;">
+                <select class="form-control" id="deliveryMode">
+                    <option value ="0">请选择配送方式</option>
+                    <option th:each="deliveryMode:${deliveryModeS}" th:text="${deliveryMode.value}" th:value="${deliveryMode.key}"></option>
+                </select>
+            </div>
+            <div style="float:left;padding:6px;margin-left:20px">
+                <span>支付日期：</span>
+            </div>
+            <div style="float:left;">
+                <input type="text" name="date" class="form-control" id="queryDate">
+            </div>
+            <div style="float:left;margin-left: 5px">
+                <input type="text" name="date" class="form-control" id="queryEndDate">
+            </div>
+            <div style="float:left;margin-left:20px;">
+                <button id="exportBtn" class="btn btn-primary" onclick="exportExcel()">导出</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.hntyy.controller.mjjzxyh;
+package com.hntyy.controller.backup;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 学校营业额统计（根据学校展示）与TurnoverCountController同步调整
+ * 学校营业额统计（根据学校展示）与TurnoverCountController同步调整  备份
  */
 @Slf4j
 @RestController
@@ -70,7 +70,7 @@ public class SchoolTurnoverCountController {
             return null;
         }
         schoolIdd = Long.valueOf(schoolid);
-        mv.setViewName("/mjjzxyh/schoolTurnoverCountOrder");
+        mv.setViewName("/backup/schoolTurnoverCountOrder");
         mv.addObject("schools",schools);
         List<CanteenEntity> canteens = canteenService.findCanteenBySchoolId(schools.getSchoolId());
         mv.addObject("canteens",canteens);

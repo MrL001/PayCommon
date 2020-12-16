@@ -1,9 +1,6 @@
 package com.hntyy.service.mjjzxyh;
 
-import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
-import com.hntyy.entity.mjjzxyh.DcwmOrderRusult;
-import com.hntyy.entity.mjjzxyh.RiderOrderQuery;
-import com.hntyy.entity.mjjzxyh.RiderOrderRusult;
+import com.hntyy.entity.mjjzxyh.*;
 
 import java.util.List;
 
@@ -51,5 +48,12 @@ public interface OrderService {
      * @return
      */
     DcwmOrderRusult findRefundOrderByShopIdsAndDateNotGroup(DcwmOrderQuery dcwmOrderQuery);
+
+    /**
+     * 商品订单列表导出
+     * @param dcwmOrderQuery
+     * @return
+     */
+    List<ShopOrderEntity> exportShopOrderList(DcwmOrderQuery dcwmOrderQuery);
 
 }

@@ -1,9 +1,6 @@
 package com.hntyy.service.mjjzxyh;
 
-import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
-import com.hntyy.entity.mjjzxyh.DcwmOrderRusult;
-import com.hntyy.entity.mjjzxyh.RiderOrderQuery;
-import com.hntyy.entity.mjjzxyh.RiderOrderRusult;
+import com.hntyy.entity.mjjzxyh.*;
 import com.hntyy.mapper.mjjzxyh.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +46,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public DcwmOrderRusult findRefundOrderByShopIdsAndDateNotGroup(DcwmOrderQuery dcwmOrderQuery) {
         return orderMapper.findRefundOrderByShopIdsAndDateNotGroup(dcwmOrderQuery);
+    }
+
+    @Override
+    public List<ShopOrderEntity> exportShopOrderList(DcwmOrderQuery dcwmOrderQuery) {
+        return orderMapper.exportShopOrderList(dcwmOrderQuery);
     }
 
 }

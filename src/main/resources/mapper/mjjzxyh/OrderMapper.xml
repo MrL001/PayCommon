@@ -247,4 +247,32 @@
         </if>
     </select>
 
+    <!-- 商品订单列表导出 -->
+    <select id="exportShopOrderList" resultType="com.hntyy.entity.mjjzxyh.ShopOrderEntity">
+        SELECT
+            o.order_id orderId,o.order_number orderNumber,o.account_id accountId,school.name schoolName,shop.type shopType,shop.name shopName,o.pay_type payType,o.box_fee boxFee,
+            o.delivery_fee deliveryFee,o.new_customer_reduction newCustomerReduction,o.full_reduction_money fullReductionMoney,o.coupon_money couponMoney,
+            o.total_referential totalReferential,o.total_price totalPrice,o.delivery_mode,receipt.name receiptName,receipt.sex receiptSex,receipt.phone receiptPhone,
+            receipt.province receiptProvince,receipt.city receiptCity,receipt.area receiptArea,receipt.address receiptAddress,o.self_take_date selfTakeDate,o.phone phone,
+            o.`create_date` createDate,o.`payment_date` paymentDate,o.`update_date` updateDate,o.status `status`
+        FROM order_tb o
+        LEFT JOIN shop_tb shop ON o.shop_id=shop.shop_id
+        LEFT JOIN school_tb school ON shop.school_id=school.school_id
+        LEFT JOIN order_receipt_info_tb receipt ON o.order_id=receipt.order_id
+        WHERE 1=1
+        <if test="schoolId != null and schoolId != ''">
+            AND school.school_id=#{schoolId}
+        </if>
+        <if test="deliveryMode != null and deliveryMode != ''">
+            AND o.delivery_mode=#{deliveryMode}
+        </if>
+        <if test="queryDate != null and queryDate != ''">
+            AND DATE_FORMAT(o.`payment_date`, '%Y-%m-%d') &gt;= #{queryDate}
+        </if>
+        <if test="queryEndDate != null and queryEndDate != ''">
+            AND DATE_FORMAT(o.`payment_date`, '%Y-%m-%d') &lt;= #{queryEndDate}
+        </if>
+        order by o.`payment_date` desc
+    </select>
+
 </mapper>

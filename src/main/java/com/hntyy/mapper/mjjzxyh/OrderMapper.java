@@ -52,4 +52,11 @@ public interface OrderMapper {
      */
     DcwmOrderRusult findRefundOrderByShopIdsAndDateNotGroup(DcwmOrderQuery dcwmOrderQuery);
 
+    /**
+     * 商品订单列表导出
+     * @param dcwmOrderQuery
+     * @return
+     */
+    List<ShopOrderEntity> exportShopOrderList(DcwmOrderQuery dcwmOrderQuery);
+
 }
