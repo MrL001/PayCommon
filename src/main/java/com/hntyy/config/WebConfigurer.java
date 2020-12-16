@@ -29,6 +29,6 @@ public class WebConfigurer implements WebMvcConfigurer {
                 .excludePathPatterns("/webjars/**","/css/**","/img/**","/js/**")
                 // 放行对外的接口
                 .excludePathPatterns("/sensitiveWords/sensitiveWordsMatch")
-                .excludePathPatterns("/schoolTurnoverCount/**");
+                .excludePathPatterns("/schoolTurnoverCount/**","/yeepayController/**");
     }
 }

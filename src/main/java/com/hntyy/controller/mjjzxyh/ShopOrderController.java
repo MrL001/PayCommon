@@ -132,7 +132,7 @@ public class ShopOrderController {
                     receiptInfo.append("收货地址：").append(shopOrderEntity.getReceiptProvince()+shopOrderEntity.getReceiptCity()+
                             shopOrderEntity.getReceiptArea()+shopOrderEntity.getReceiptAddress()).append("\n");
                 } else {
-                    receiptInfo.append("自取时间：").append(shopOrderEntity.getSelfTakeDate()).append("\n");
+                    receiptInfo.append("自取时间：").append(shopOrderEntity.getSelfTakeDate() == null ? "":simpleDateFormat.format(shopOrderEntity.getSelfTakeDate())).append("\n");
                     receiptInfo.append("预留手机号：").append(shopOrderEntity.getPhone()).append("\n");
                 }
                 shopOrderEntity.setReceiptInfo(receiptInfo.toString());
