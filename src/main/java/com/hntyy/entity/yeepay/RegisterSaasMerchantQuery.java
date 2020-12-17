@@ -2,6 +2,8 @@ package com.hntyy.entity.yeepay;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 特约商户入网(企业/个体) 查询实体
  */
@@ -64,6 +66,6 @@ public class RegisterSaasMerchantQuery {
     /**
      * 开通产品信息
      */
-    private ProductInfo productInfo;
+    private List<ProductInfo> productInfo;
 
 }

@@ -1,38 +1,41 @@
-package com.hntyy.controller.mjjzxyh;
+package com.hntyy.controller.backup;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.hntyy.common.*;
-import com.hntyy.entity.PageHelper;
-import com.hntyy.entity.mjjzxyh.*;
+import com.hntyy.common.ExcelStyleUtil;
+import com.hntyy.common.UrlUtil;
+import com.hntyy.entity.mjjzxyh.DcwmOrderQuery;
+import com.hntyy.entity.mjjzxyh.OrderDetailEntity;
+import com.hntyy.entity.mjjzxyh.SchoolEntity;
+import com.hntyy.entity.mjjzxyh.ShopOrderEntity;
 import com.hntyy.enums.OrderStatusEnum;
 import com.hntyy.enums.PayTypeEnum;
-import com.hntyy.service.mjjzxyh.*;
+import com.hntyy.service.mjjzxyh.OrderDetailService;
+import com.hntyy.service.mjjzxyh.OrderService;
+import com.hntyy.service.mjjzxyh.SchoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 商品订单导出
+ * 学校商品订单导出 与ShopOrderController同步调整  备份
  */
 @Slf4j
-@RequestMapping("/shopOrder")
 @RestController
-public class ShopOrderController {
+@RequestMapping("/schoolShopOrder")
+public class SchoolShopOrderController {
 
     @Autowired
     private SchoolService schoolService;
@@ -43,15 +46,29 @@ public class ShopOrderController {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    // 定义全局变量用于导出
+    private Long schoolIdd;
+
     @RequestMapping("/index")
-    public ModelAndView index(ModelAndView mv,DcwmOrderQuery dcwmOrderQuery) {
-         mv.setViewName("/mjjzxyh/shopOrder");
-        // 查询所有学校（用于下拉框）
-        List<SchoolEntity> schools = schoolService.findAll();
-        // 学校id加密
-        for (SchoolEntity s:schools) {
-            s.setSchoolIdStr(UrlUtil.enCryptAndEncode(s.getSchoolId().toString()));
+    public ModelAndView index(ModelAndView mv,String schoolId) {
+        schoolIdd = null;
+        mv.setViewName("/backup/schoolShopOrder");
+        // 必须传学校id
+        if (StringUtils.isEmpty(schoolId)){
+            return null;
         }
+        // 查询学校（用于下拉框）解密
+        String schoolid = null;
+        try {
+            schoolid = UrlUtil.deCryptAndDecode(schoolId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SchoolEntity schools = schoolService.findSchoolById(Long.valueOf(schoolid));
+        if (schools == null){
+            return null;
+        }
+        schoolIdd = Long.valueOf(schoolid);
         mv.addObject("schools",schools);
         // 查询所有配送方式 （用于下拉框） 1配送，2自取，3堂食
         Map<Integer,String> deliveryModeS = new HashMap<>();
@@ -65,9 +82,7 @@ public class ShopOrderController {
     @RequestMapping("/exportDcwmOrder")
     public void exportDcwmOrder(HttpServletResponse response, DcwmOrderQuery dcwmOrderQuery){
         try {
-            if (dcwmOrderQuery.getSchoolId().longValue() == 0l){
-                dcwmOrderQuery.setSchoolId(null);
-            }
+            dcwmOrderQuery.setSchoolId(schoolIdd);
             if (dcwmOrderQuery.getDeliveryMode().intValue() == 0){
                 dcwmOrderQuery.setDeliveryMode(null);
             }

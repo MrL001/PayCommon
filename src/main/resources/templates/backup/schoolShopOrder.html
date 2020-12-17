@@ -9,7 +9,7 @@
     <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <![endif]-->
-    <title>商品订单</title>
+    <title>学校商品订单（商品订单备份）</title>
 
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/webjars/bootstrap-table/1.16.0/bootstrap-table.min.css"/>
@@ -136,11 +136,11 @@
 
         // 导出Excel
         function exportExcel () {
-            var schoolId = $("#schoolId").val();
+            debugger
             var deliveryMode = $("#deliveryMode").val();
             var queryDate = $("#queryDate").val();
             var queryEndDate = $("#queryEndDate").val();
-            window.location.href = "/shopOrder/exportDcwmOrder?schoolId="+schoolId+"&deliveryMode="+deliveryMode+
+            window.location.href = "/schoolShopOrder/exportDcwmOrder?deliveryMode="+deliveryMode+
                 "&queryDate="+queryDate+"&queryEndDate="+queryEndDate+"&random="+Math.round(Math.random()*100);
         }
 
@@ -150,19 +150,10 @@
 <body>
 <div class="panel panel-primary" style="margin-top: 20px">
     <div class="panel-heading">
-        <h3 class="panel-title">商品订单</h3>
+        <h3 class="panel-title"><span th:text="${schools.name}"></span>  商品订单</h3>
     </div>
     <div class="panel-body">
         <div style="display:inline-block;">
-            <div style="float:left;padding:6px;">
-                <span>学校：</span>
-            </div>
-            <div style="float:left;">
-                <select class="form-control" id="schoolId">
-                    <option value ="0">请选择学校</option>
-                    <option th:each="school:${schools}" th:text="${school.name}" th:value="${school.schoolId}"></option>
-                </select>
-            </div>
             <div style="float:left;padding:6px;margin-left:20px">
                 <span>配送方式：</span>
             </div>
@@ -186,14 +177,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<div style="margin-top: 10px">
-    外部地址：
-    <span th:each="school : ${schools}">
-        <a th:href="@{'http://localhost:8080/schoolShopOrder/index?schoolId='+${school.schoolIdStr}}" target="_blank"><span th:text="${school.name}"></span>商品订单</a>
-        &nbsp;&nbsp;
-    </span>
 </div>
 
 </body>
