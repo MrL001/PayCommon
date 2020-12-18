@@ -22,20 +22,21 @@ public class LoginController {
 
     Map<String, String> userMap = new HashMap<>();
 
-    @RequestMapping({"/","/login"})
+    @RequestMapping({"/","/login","/index"})
     public ModelAndView index() {
-        return new ModelAndView("login");
+//        return new ModelAndView("login");
+        return new ModelAndView("index");
     }
 
-    @RequestMapping(value = "/index", method = RequestMethod.POST)
-    public ModelAndView login(@ModelAttribute UserEntity user, HttpSession session) {
-        UserEntity userEntity = userService.findUserByUserName(user.getUserName());
-        if (userEntity == null || !user.getPassword().equals(userEntity.getPassword())){
-            return new ModelAndView("login");
-        } else {
-            //登录成功，session中加入
-            session.setAttribute("user",userEntity);
-            return new ModelAndView("index");
-        }
-    }
+//    @RequestMapping(value = "/index", method = RequestMethod.POST)
+//    public ModelAndView login(@ModelAttribute UserEntity user, HttpSession session) {
+//        UserEntity userEntity = userService.findUserByUserName(user.getUserName());
+//        if (userEntity == null || !user.getPassword().equals(userEntity.getPassword())){
+//            return new ModelAndView("login");
+//        } else {
+//            //登录成功，session中加入
+//            session.setAttribute("user",userEntity);
+//            return new ModelAndView("index");
+//        }
+//    }
 }

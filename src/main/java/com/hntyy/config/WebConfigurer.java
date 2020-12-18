@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
+//@Configuration
 public class WebConfigurer implements WebMvcConfigurer {
 
     @Autowired
@@ -24,11 +24,11 @@ public class WebConfigurer implements WebMvcConfigurer {
         // addPathPatterns("/**") 表示拦截所有的请求，
         // excludePathPatterns("/login", "/register") 表示除了登陆与注册之外，因为登陆注册不需要登陆也可以访问
 //        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/index", "/login");
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/","/index","/login")
-                //放行静态资源
-                .excludePathPatterns("/webjars/**","/css/**","/img/**","/js/**")
-                // 放行对外的接口
-                .excludePathPatterns("/sensitiveWords/sensitiveWordsMatch")
-                .excludePathPatterns("/schoolTurnoverCount/**","/yeepayController/**","/notifyUrl/**","/schoolShopOrder/**");
+//        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/","/index","/login")
+//                //放行静态资源
+//                .excludePathPatterns("/webjars/**","/css/**","/img/**","/js/**")
+//                // 放行对外的接口
+//                .excludePathPatterns("/sensitiveWords/sensitiveWordsMatch")
+//                .excludePathPatterns("/schoolTurnoverCount/**","/yeepayController/**","/notifyUrl/**","/schoolShopOrder/**");
     }
 }
